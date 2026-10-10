@@ -15,7 +15,7 @@ export class SearchPage extends BasePage {
     super(page);
     this.searchInput = page.locator('input[type="text"], input[type="search"]').first();
     this.searchButton = page.locator('button[type="submit"], [robot-test="searchButton"]').first();
-    this.searchNavbarButton = page.locator('[robot-test="nav:searchGroups"]');
+    this.searchNavbarButton = page.locator('[robot-test="nav:searchGroups"]:visible').first();
     this.resultsContainer = page.locator('.search-results, .panel, .table, .content-wrapper').first();
   }
 

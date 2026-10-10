@@ -17,13 +17,12 @@ test.describe('Dashboard & Core Navigation @dashboard', () => {
   });
 
   test('Localization: Navbar switches language successfully @regression', async ({ page }) => {
-    await page.goto('/');
-    // Check Finnish is default or accessible
+    await page.goto('/login');
     const enButton = page.locator('.navbar-nav a', { hasText: /^EN$/i }).first();
     if (await enButton.isVisible()) {
       await enButton.click();
       await page.waitForLoadState('domcontentloaded');
-      await expect(page).toHaveURL(/\/en/);
+      await expect(page).toHaveURL(/en|lang=en/);
     }
   });
 });

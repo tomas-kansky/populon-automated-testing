@@ -2,8 +2,9 @@
 
 test.describe('Search Communities Suite @search', () => {
   test('Navbar Navigation: Click "Etsi yhteisö" redirects to /search @smoke', async ({ page, searchPage }) => {
-    await page.goto('/');
-    const searchNav = page.locator('[robot-test="nav:searchGroups"]').first();
+    await page.goto('/login');
+    // Using :visible to select the desktop vs mobile button depending on viewport
+    const searchNav = page.locator('[robot-test="nav:searchGroups"]:visible').first();
     await expect(searchNav).toBeVisible();
     await searchNav.click();
     await searchPage.expectSearchPageLoaded();
