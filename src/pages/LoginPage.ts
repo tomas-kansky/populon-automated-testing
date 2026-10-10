@@ -25,7 +25,8 @@ export class LoginPage extends BasePage {
     this.forgotPasswordLink = page.locator('[wicketpath="loginPanel_passwordRecoveryLink"], a[href*="password-recovery"]');
     this.closeButton = page.locator('a[wicketpath="closeLink"]');
     this.loginHeading = page.locator('.login-form h5');
-    this.feedbackAlert = page.locator('#globalFeedback, .feedback, .alert');
+    // Using .first() to prevent Playwright strict-mode violations on nested alert containers
+    this.feedbackAlert = page.locator('#globalFeedback .alert, #globalFeedback [role="alert"], .alert.bg-danger').first();
   }
 
   async goto(): Promise<void> {
