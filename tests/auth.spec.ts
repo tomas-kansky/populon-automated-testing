@@ -29,7 +29,7 @@ test.describe('Authentication Suite @auth', () => {
     await expect(page).toHaveURL(/password-recovery/);
   });
 
-  test('Positive: Login with credentials from .env @smoke', async ({ loginPage, dashboardPage }) => {
+  test('Positive: Login with credentials from .env @smoke', async ({ loginPage, dashboardPage, page }) => {
     const email = process.env.TEST_USER_EMAIL;
     const password = process.env.TEST_USER_PASSWORD;
 
@@ -40,6 +40,9 @@ test.describe('Authentication Suite @auth', () => {
 
     await loginPage.login(email!, password!);
     await dashboardPage.expectDashboardLoaded();
+
+    // Počká 5 sekund na přihlášené obrazovce pro vizuální kontrolu
+    await page.waitForTimeout(5000);
   });
 
   test('Session: Logout terminates session and redirects @smoke', async ({ loginPage, dashboardPage, page }) => {
