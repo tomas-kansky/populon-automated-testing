@@ -1,11 +1,11 @@
 ﻿import { test, expect } from '../src/fixtures/testFixtures';
 
-test.describe('Authentication Tests @auth', () => {
+test.describe('Authentication Suite @auth', () => {
   test.beforeEach(async ({ loginPage }) => {
     await loginPage.goto();
   });
 
-  test('UI Elements: Login form renders all core elements @smoke', async ({ loginPage }) => {
+  test('UI Elements: Login form renders all mandatory controls @smoke', async ({ loginPage }) => {
     await loginPage.expectLoginFormVisible();
     await expect(loginPage.forgotPasswordLink).toBeVisible();
     await expect(loginPage.rememberMeCheckbox).toBeVisible();
@@ -13,23 +13,23 @@ test.describe('Authentication Tests @auth', () => {
     await expect(loginPage.brandLogo).toBeVisible();
   });
 
-  test('Negative: Invalid credentials display error notification', async ({ loginPage }) => {
-    await loginPage.login('invalid.user@test-populon.com', 'IncorrectPassword123!');
+  test('Negative: Invalid credentials display error alert @regression', async ({ loginPage }) => {
+    await loginPage.login('unauthorized.tester@example.com', 'IncorrectPassword999!');
     await loginPage.expectErrorMessage();
   });
 
-  test('Negative: Empty fields submission stays on login page', async ({ loginPage, page }) => {
+  test('Negative: Empty credentials submission does not authenticate @regression', async ({ loginPage, page }) => {
     await loginPage.clickSubmit();
-    // Validates page does not authenticate without credentials
+    // User must remain on login path
     await expect(page).toHaveURL(/login/);
   });
 
-  test('Navigation: "Unohtuiko salasana?" redirects to password recovery', async ({ loginPage, page }) => {
+  test('Navigation: "Unohtuiko salasana?" redirects to password recovery @regression', async ({ loginPage, page }) => {
     await loginPage.forgotPasswordLink.click();
     await expect(page).toHaveURL(/password-recovery/);
   });
 
-  test('Positive: Login with valid credentials from .env @smoke', async ({ loginPage, dashboardPage }) => {
+  test('Positive: Login with credentials from .env @smoke', async ({ loginPage, dashboardPage }) => {
     const email = process.env.TEST_USER_EMAIL;
     const password = process.env.TEST_USER_PASSWORD;
 
@@ -40,5 +40,23 @@ test.describe('Authentication Tests @auth', () => {
 
     await loginPage.login(email!, password!);
     await dashboardPage.expectDashboardLoaded();
+  });
+
+  test('Session: Logout terminates session and redirects @smoke', async ({ loginPage, dashboardPage, page }) => {
+    const email = process.env.TEST_USER_EMAIL;
+    const password = process.env.TEST_USER_PASSWORD;
+
+    test.skip(
+      !email || !password,
+      'Skipping test: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env'
+    );
+
+    // Login first
+    await loginPage.login(email!, password!);
+    await dashboardPage.expectDashboardLoaded();
+
+    // Perform logout
+    await dashboardPage.logout();
+    await expect(page).toHaveURL(/login|\/$/);
   });
 });

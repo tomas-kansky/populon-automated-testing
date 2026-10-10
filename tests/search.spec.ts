@@ -1,7 +1,7 @@
 ﻿import { test, expect } from '../src/fixtures/testFixtures';
 
-test.describe('Community Search & Public Navigation @search', () => {
-  test('Navbar: Click "Etsi yhteisö" navigates to search page @smoke', async ({ page, searchPage }) => {
+test.describe('Search Communities Suite @search', () => {
+  test('Navbar Navigation: Click "Etsi yhteisö" redirects to /search @smoke', async ({ page, searchPage }) => {
     await page.goto('/');
     const searchNav = page.locator('[robot-test="nav:searchGroups"]').first();
     await expect(searchNav).toBeVisible();
@@ -9,8 +9,16 @@ test.describe('Community Search & Public Navigation @search', () => {
     await searchPage.expectSearchPageLoaded();
   });
 
-  test('Direct URL: Direct navigation to /search loads correctly', async ({ searchPage }) => {
+  test('Direct URL: Navigation directly to /search loads search controls @regression', async ({ searchPage }) => {
     await searchPage.goto();
     await searchPage.expectSearchPageLoaded();
+    await expect(searchPage.searchInput).toBeEditable();
+  });
+
+  test('Query: Submitting a search term executes query @regression', async ({ searchPage }) => {
+    await searchPage.goto();
+    await searchPage.expectSearchPageLoaded();
+    await searchPage.searchFor('Test');
+    await expect(searchPage.resultsContainer).toBeVisible();
   });
 });

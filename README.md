@@ -1,22 +1,23 @@
-﻿# 🎭 Populon Automated Testing Suite
+﻿# 🎭 Populon Automated E2E Testing Suite
 
 [![Playwright Tests](https://github.com/USERNAME/populon-automated-testing/actions/workflows/playwright.yml/badge.svg)](https://github.com/USERNAME/populon-automated-testing/actions/workflows/playwright.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue.svg)](https://www.typescriptlang.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-1.50+-green.svg)](https://playwright.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Robust, scalable End-to-End (E2E) automated testing suite for [Populon](https://demo.populon.app/) built with **Playwright**, **TypeScript**, and the **Page Object Model (POM)** pattern.
+Enterprise-grade End-to-End (E2E) automated testing suite for [Populon](https://demo.populon.app/) built with **Playwright**, **TypeScript**, and the **Page Object Model (POM)** pattern.
 
 ---
 
-## 📋 Features
+## 📋 Key Architecture & Features
 
-- 🏗️ **Page Object Model (POM)**: Clean abstraction layer decoupling tests from DOM selectors and UI implementation.
-- ⚡ **Playwright Test Runner**: Native auto-waiting, parallel execution, isolated browser contexts, and trace debugging.
+- 🏗️ **Page Object Model (POM)**: Complete UI abstraction layer (`BasePage`, `LoginPage`, `DashboardPage`, `SearchPage`).
+- ⚡ **Playwright Test Runner**: Fast parallel execution, auto-wait mechanics, isolated browser contexts, and trace debugging.
 - 🧩 **Custom Test Fixtures**: Dependency-injected page instances (`loginPage`, `dashboardPage`, `searchPage`) via custom fixtures.
-- 🛡️ **Environment Configuration**: Secure credential management via `.env` (`dotenv`), preventing secret leakage in public repositories.
-- 📊 **Rich Reporting & Artifacts**: Playwright HTML reports, automatic screenshots on failure, and trace recordings.
-- 🚀 **GitHub Actions CI/CD**: Pre-configured CI pipeline executing on push/PR with artifact archiving.
+- ⏰ **Scheduled Synthetic Monitoring**: Daily scheduled runs at 06:00 UTC via GitHub Actions cron to continuously monitor application availability.
+- 🏷️ **Tag-based Suite Filtering**: Fine-grained execution via tags (`@smoke`, `@regression`, `@auth`, `@search`, `@dashboard`).
+- 🛡️ **Zero Secret Leakage**: Environment-driven credentials via `.env` locally and GitHub Secrets in CI/CD.
+- 📊 **Rich Artifacts**: HTML reports, screenshots on failure, and trace recordings.
 
 ---
 
@@ -26,23 +27,24 @@ Robust, scalable End-to-End (E2E) automated testing suite for [Populon](https://
 populon-automated-testing/
 ├── .github/
 │   └── workflows/
-│       └── playwright.yml         # GitHub Actions CI workflow
+│       └── playwright.yml         # GitHub Actions CI & Scheduled Cron
 ├── src/
-│   ├── pages/                     # Page Object Model definitions
-│   │   ├── BasePage.ts            # Common base page functionality
-│   │   ├── LoginPage.ts           # Login page actions & locators
-│   │   ├── DashboardPage.ts       # Post-login dashboard assertions
+│   ├── pages/                     # Page Object Model classes
+│   │   ├── BasePage.ts            # Common methods (language switcher, wait helpers)
+│   │   ├── LoginPage.ts           # Login screen locators and actions
+│   │   ├── DashboardPage.ts       # Authenticated dashboard verifications & logout
 │   │   └── SearchPage.ts          # Search groups & community exploration
 │   └── fixtures/
-│       └── testFixtures.ts        # Extended Playwright test runner with fixtures
+│       └── testFixtures.ts        # Extended Playwright test fixtures
 ├── tests/
-│   ├── auth.spec.ts               # Authentication & login test scenarios
-│   └── search.spec.ts             # Search & navigation test scenarios
+│   ├── auth.spec.ts               # Authentication tests (positive, negative, recovery, logout)
+│   ├── search.spec.ts             # Community search & exploration tests
+│   └── dashboard.spec.ts          # Authenticated dashboard & localization tests
 ├── .env.example                   # Environment variable template
-├── .env                           # Local secrets (git-ignored)
+├── .env                           # Local credentials (git-ignored)
 ├── .gitignore                     # Git ignore rules
-├── package.json                   # Dependencies & npm scripts
-├── playwright.config.ts           # Playwright test configuration
+├── package.json                   # NPM dependencies and scripts
+├── playwright.config.ts           # Playwright configuration
 ├── tsconfig.json                  # TypeScript compiler settings
 └── README.md                      # Documentation
 ```
@@ -73,70 +75,76 @@ npm install
 ```bash
 npx playwright install chromium
 ```
-*(Or run `npx playwright install` to install all browsers: Chromium, Firefox, WebKit).*
 
 ### 4. Configure environment variables
-Copy the `.env.example` file to `.env`:
+Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
-Open `.env` and fill in your test credentials:
+Fill in your credentials:
 ```env
 BASE_URL=https://demo.populon.app
 TEST_USER_EMAIL=your_email@example.com
 TEST_USER_PASSWORD=your_password
 ```
 
-> **Note:** The positive login test will be automatically skipped if `TEST_USER_EMAIL` or `TEST_USER_PASSWORD` is not set in `.env`.
-
 ---
 
-## 🧪 Running Tests
+## 🧪 Running Tests Locally
 
 | Command | Description |
 |---|---|
-| `npm test` | Runs all tests in headless mode |
-| `npm run test:headed` | Runs tests with visible browser window |
-| `npm run test:ui` | Opens Playwright Interactive UI Mode (recommended for debugging) |
-| `npm run test:smoke` | Runs only tests tagged with `@smoke` |
-| `npm run test:auth` | Runs authentication test suite |
-| `npm run test:debug` | Runs tests in Playwright Inspector debug mode |
-| `npm run report` | Opens latest HTML test report in browser |
-| `npm run lint` | Runs TypeScript type checking |
+| `npm test` | Run all test suites in headless mode |
+| `npm run test:smoke` | Run only core smoke tests (`@smoke`) |
+| `npm run test:regression` | Run regression tests (`@regression`) |
+| `npm run test:auth` | Run authentication test suite |
+| `npm run test:search` | Run community search test suite |
+| `npm run test:dashboard` | Run dashboard & navigation test suite |
+| `npm run test:ui` | Open Playwright interactive UI mode |
+| `npm run test:headed` | Run tests with browser window visible |
+| `npm run report` | Open latest HTML test report |
+| `npm run lint` | Run TypeScript type checks (`tsc --noEmit`) |
 
 ---
 
-## 📊 Test Scenarios Included
+## 📊 Test Scenarios Overview
 
 ### 🔐 Authentication (`tests/auth.spec.ts`)
-- **UI Elements Validation** (`@smoke`): Verifies presence of email, password, submit button, remember me, and branding.
-- **Negative Authentication**: Verifies feedback error message when logging in with invalid credentials.
-- **Empty Credentials Submission**: Verifies submission validation without input.
-- **Password Recovery Navigation**: Verifies redirect to password recovery page.
+- **UI Elements Validation** (`@smoke`): Verifies login form inputs, labels, branding, recovery links.
+- **Negative Authentication** (`@regression`): Asserts error alert feedback on incorrect credentials.
+- **Empty Credentials Submission** (`@regression`): Validates prevented authentication on blank submission.
+- **Password Recovery Navigation** (`@regression`): Validates redirect to `/password-recovery`.
 - **Positive Login** (`@smoke`): Authenticates using `.env` credentials and asserts dashboard load.
+- **Session Logout** (`@smoke`): Terminates user session and verifies redirect.
 
 ### 🔍 Community Search (`tests/search.spec.ts`)
-- **Navbar Navigation** (`@smoke`): Verifies clicking *Etsi yhteisö* redirects to `/search`.
-- **Direct Navigation**: Verifies `/search` page loads properly with search inputs.
+- **Navbar Search** (`@smoke`): Validates `nav:searchGroups` link redirection to `/search`.
+- **Direct Search Page** (`@regression`): Direct URL access and editable input check.
+- **Search Execution** (`@regression`): Submits query and checks result container.
+
+### 📈 Dashboard & Navigation (`tests/dashboard.spec.ts`)
+- **Dashboard Access** (`@smoke`): Verifies authenticated dashboard content.
+- **Localization** (`@regression`): Verifies language switching across navbar links.
 
 ---
 
-## 🔄 CI/CD (GitHub Actions)
+## ⏰ CI/CD & Scheduled Cron (GitHub Actions)
 
-When pushed to GitHub, the workflow automatically runs all tests on Ubuntu with Chromium.
+The workflow [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml) runs:
+1. **On Push & Pull Request** to `main`.
+2. **On Schedule (Cron)**: Daily at **06:00 UTC** (`0 6 * * *`).
+3. **Manual Trigger (`workflow_dispatch`)**: Choose specific suites (`smoke`, `regression`, `auth`, `search`, `dashboard`, `all`).
 
-To run authenticated tests in GitHub Actions:
-1. Navigate to your repository on GitHub.
-2. Go to **Settings > Secrets and variables > Actions**.
-3. Add the following repository secrets:
-   - `BASE_URL`: `https://demo.populon.app`
-   - `TEST_USER_EMAIL`: `<your test email>`
-   - `TEST_USER_PASSWORD`: `<your test password>`
+### Setting up GitHub Secrets:
+In your repository: **Settings > Secrets and variables > Actions**:
+- `BASE_URL`: `https://demo.populon.app`
+- `TEST_USER_EMAIL`: `<demo user email>`
+- `TEST_USER_PASSWORD`: `<demo user password>`
 
-After every workflow run, the **Playwright HTML Report** is uploaded as an artifact and stored for 14 days.
+Test reports are uploaded as GitHub workflow artifacts and retained for 14 days.
 
 ---
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see the [LICENSE](LICENSE) file for details.

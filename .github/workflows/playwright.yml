@@ -1,15 +1,32 @@
-﻿name: Playwright Tests
+﻿name: Playwright E2E Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
+  # Scheduled execution: Every day at 06:00 UTC (08:00 CEST)
+  schedule:
+    - cron: '0 6 * * *'
+  # Manual execution trigger from GitHub Actions tab
   workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test Suite to execute'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - smoke
+          - regression
+          - auth
+          - search
+          - dashboard
 
 jobs:
   test:
-    name: Run E2E Tests
+    name: Run Playwright Tests
     timeout-minutes: 20
     runs-on: ubuntu-latest
 
@@ -17,7 +34,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -29,8 +46,25 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright Tests
-        run: npm test
+      - name: Execute Tests
+        run: |
+          SUITE="${{ github.event.inputs.test_suite }}"
+          if [ "$SUITE" = "smoke" ]; then
+            npm run test:smoke
+          elif [ "$SUITE" = "regression" ]; then
+            npm run test:regression
+          elif [ "$SUITE" = "auth" ]; then
+            npm run test:auth
+          elif [ "$SUITE" = "search" ]; then
+            npm run test:search
+          elif [ "$SUITE" = "dashboard" ]; then
+            npm run test:dashboard
+          elif [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "Running scheduled smoke suite"
+            npm run test:smoke
+          else
+            npm test
+          fi
         env:
           BASE_URL: ${{ secrets.BASE_URL || 'https://demo.populon.app' }}
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
