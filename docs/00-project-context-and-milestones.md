@@ -73,15 +73,22 @@ Tento dokument definuje cíle projektu, harmonogram milníků v předmětu **Zaj
 
 ## 3. Živé Demo automatizovaných testů (Technický cíl)
 
-Kromě dokumentačních výstupů je cílem projektu ukázat na konzultaci / obhajobě **funkční automatizované testy jedním kliknutím nebo příkazem ve zpomaleném režimu (Slow-Motion Demo)**:
+Kromě dokumentačních výstupů je cílem projektu ukázat na konzultaci / obhajobě **funkční automatizované testy jedním kliknutím nebo příkazem ve zpomaleném režimu (Slow-Motion Demo)** s živým HUD panelem přímo v prohlížeči:
 
-- **Dvojklik ve Windows:** Spusť [`run-demo.bat`](../run-demo.bat) v kořeni projektu.
-- **Jeden příkaz v terminálu (automatický průchod všemi testy):**
-  ```bash
-  npm run demo
+> ⚠️ **Důležité upozornění pro spouštění na Windows (mimo Antigravity 2.0):**  
+> Terminál uvnitř Antigravity 2.0 běží na izolované virtuální ploše Windows (`WinSta0\exebox-...`), kde se GUI okna nezobrazují na hlavní obrazovce. Pro promítání okna prohlížeče spouštěj příkazy v **klasickém Windows PowerShellu / Windows Terminálu** (`Win + X` → *Terminál*) nebo dvojklikem v Průzkumníku Windows.
+
+- **Jednořádkový příkaz do externího PowerShellu (spustí `TC-001` až `TC-004`):**
+  ```powershell
+  cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:scenarios
+  ```
+- **Dvojklik v Průzkumníku Windows:** Spusť [`run-demo.bat`](../run-demo.bat) v kořeni projektu.
+- **Spuštění všech 15 testů ve zpomaleném režimu:**
+  ```powershell
+  cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo
   ```
 - **Interaktivní Playwright UI (výběr konkrétního testu kliknutím se zapnutým zpomalením):**
-  ```bash
-  npm run demo:ui
+  ```powershell
+  cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:ui
   ```
-- Konfigurace dema je uložena v [`playwright.demo.config.ts`](../playwright.demo.config.ts) (`headless: false`, `slowMo: 800`, `workers: 1`, sekvenční běh).
+- Konfigurace dema je uložena v [`playwright.demo.config.ts`](../playwright.demo.config.ts) (`headless: false`, `slowMo: 800`, `workers: 1`, sekvenční běh) a vizuální překryvný panel v [`src/utils/demoOverlay.ts`](../src/utils/demoOverlay.ts).

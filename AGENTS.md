@@ -55,9 +55,13 @@ Tento dokument slouží jako **hlavní vstupní bod pro AI agenty** pracující 
    - Veškeré lokátory a interakce s UI patří do tříd v `src/pages/` (dědících z `BasePage.ts`).
    - Nové Page Objecty registruj jako fixtury v `src/fixtures/testFixtures.ts`.
    - Samotné testy v `tests/*.spec.ts` musí být čitelné jako byznysový scénář.
-2. **Optimalizace pro živé Demo (`playwright.demo.config.ts`):**
-   - Demo běží s `workers: 1`, `fullyParallel: false`, `headless: false` a `slowMo: 800` (nebo dle `SLOW_MO` v `.env`).
-   - U klíčových byznysových testů používej `await test.step('Název kroku dle TC', async () => { ... })`, aby v Playwright UI (`npm run demo:ui`) a v HTML reportu byly vidět přesné kroky odpovídající šabloně v Excelu (`docs/03-test-cases.md`).
+2. **Optimalizace pro živé Demo (`playwright.demo.config.ts` a spouštění mimo `exebox`):**
+   - Demo běží s `workers: 1`, `fullyParallel: false`, `headless: false` a `slowMo: 800` (nebo dle `SLOW_MO` v `.env`) a automaticky injektuje vizuální **Live Demo HUD overlay** (`src/utils/demoOverlay.ts`).
+   - ⚠️ **Pozor na Antigravity 2.0 Sandbox (`WinSta0\exebox-...`):** Interní terminál v Antigravity 2.0 spouští procesy na izolované virtuální ploše Windows (`exebox`), takže se okno prohlížeče nevykreslí na hlavní obrazovce uživatele (`WinSta0\Default`). Pro viditelné promítání na obrazovce je nutné spouštět demo z **externího Windows PowerShellu / Terminálu** nebo dvojklikem na `run-demo.bat` v Průzkumníku Windows:
+     ```powershell
+     cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:scenarios
+     ```
+   - U klíčových byznysových testů používej `await demoStep(page, 'Název kroku dle TC', async () => { ... })`, aby jak v živém HUD panelu uvnitř prohlížeče, tak v Playwright UI (`npm run demo:ui`) a v HTML reportu byly vidět přesné kroky odpovídající šabloně v Excelu (`docs/03-test-cases.md`).
    - Označuj testy příslušnými tagy v názvu: např. `@tc001`, `@notifications`, `@smoke`, `@regression`, `@demo`.
    - Na konci důležitých vizuálních scénářů v headed/demo režimu lze ponechat krátkou pauzu nebo čitelnou aserci, aby publikum stihlo zaregistrovat výsledný stav na obrazovce.
 3. **Konfigurace a citlivé údaje (`.env`):**

@@ -38,16 +38,24 @@ An automated End-to-End (E2E) test automation suite designed for [Populon](https
 
 ## 🎬 Live Slow-Motion Demo (One-Click Presentation)
 
-To demonstrate the automated tests live during a consultation or presentation in a **visible browser window with slow-motion steps (`800ms` per action)**:
+To demonstrate the automated tests live during a consultation or presentation in a **visible browser window with slow-motion steps (`800ms` per action)** and the **in-browser Live Demo HUD overlay**:
 
-1. **Windows One-Click Launcher:** Double-click [`run-demo.bat`](run-demo.bat) in the project root.
-2. **Single Command (Terminal):**
-   ```bash
-   npm run demo
+> ⚠️ **Important (Antigravity 2.0 Users):** Do **not** run the live demo from the internal terminal inside Antigravity 2.0 — Antigravity runs terminal child processes on an isolated virtual Windows desktop (`WinSta0\exebox-...`), which hides GUI browser windows off-screen. Always launch the demo from **Windows File Explorer** (`run-demo.bat`) or an **external Windows PowerShell / Windows Terminal** (`Win + X` → *Terminal*).
+
+### Quick Copy-Paste for External Windows PowerShell:
+```powershell
+cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:scenarios
+```
+
+### Other Ways to Launch the Live Demo:
+1. **Windows One-Click Launcher:** Open the folder in File Explorer and double-click [`run-demo.bat`](run-demo.bat) (press `Enter` for `TC-001`–`TC-004`).
+2. **Run All 15 Tests in Slow-Mo:**
+   ```powershell
+   cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo
    ```
 3. **Interactive Visual Picker (Playwright UI with Slow-Mo):**
-   ```bash
-   npm run demo:ui
+   ```powershell
+   cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:ui
    ```
 
 ---
