@@ -6,6 +6,12 @@
   "scripts": {
     "demo": "playwright test --headed --config=playwright.demo.config.ts",
     "demo:scenarios": "playwright test --headed --config=playwright.demo.config.ts tests/scenarios.spec.ts",
+    "demo:pass": "playwright test --headed --config=playwright.demo.config.ts tests/scenarios.spec.ts --grep-invert @bug002",
+    "demo:tc1": "playwright test --headed --config=playwright.demo.config.ts -g @tc001",
+    "demo:tc2": "playwright test --headed --config=playwright.demo.config.ts -g @tc002",
+    "demo:tc3": "playwright test --headed --config=playwright.demo.config.ts -g @tc003",
+    "demo:tc4": "playwright test --headed --config=playwright.demo.config.ts -g @tc004",
+    "demo:bug002": "playwright test --headed --config=playwright.demo.config.ts -g @bug002",
     "demo:ui": "playwright test --headed --config=playwright.demo.config.ts --ui",
     "demo:smoke": "playwright test --headed --config=playwright.demo.config.ts --grep @smoke",
     "demo:auth": "playwright test --headed --config=playwright.demo.config.ts tests/auth.spec.ts",

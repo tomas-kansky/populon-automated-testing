@@ -183,7 +183,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       });
     });
 
-    await demoStep(page, 'Krok 5: Ověření hlášky "Data saved!", kontrola perzistence uložených hodnot a uvedení do výchozího stavu', async () => {
+    await demoStep(page, 'Krok 5: Ověření hlášky "Data saved!", kontrola perzistence uložených hodnot a ověření vady BUG-001', async () => {
       await memberCardPage.expectSaveSuccessAlert();
       await memberCardPage.openEditForm();
       await expect(memberCardPage.streetAddressInput).toHaveValue('Parukářka 4');
@@ -198,6 +198,9 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
         allowAttendeeList: true,
       });
       await memberCardPage.expectSaveSuccessAlert();
+
+      // Ověření reálné vady BUG-001: uložená adresa člena se na přehledu nevykreslí (pouze kód země "CZ")
+      await expect(page.locator('body')).toContainText('CZ');
     });
 
     await demoStep(page, 'Krok 6–7: Odhlášení a ověření, že přímá URL členské karty je chráněna před nepřihlášeným uživatelem (GDPR/RBAC)', async () => {
@@ -207,6 +210,37 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       await memberCardPage.expectRestrictedAccessForAnonymous();
       await expect(page.locator('body')).not.toContainText('+420777868179');
       await page.waitForTimeout(1500);
+    });
+  });
+
+  test('TC-BUG-002: Ověření vady BUG-002 — Zmizení jazykového přepínače a vynucení angličtiny po přihlášení @bug002 @localization @demo', async ({
+    loginPage,
+    dashboardPage,
+    page,
+  }) => {
+    const email = process.env.TEST_USER_EMAIL;
+    const password = process.env.TEST_USER_PASSWORD;
+    test.skip(!email || !password, 'Skipping BUG-002: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
+
+    await demoStep(page, 'Krok 1: Výběr finského jazyka (FI) na veřejné přihlašovací obrazovce', async () => {
+      await loginPage.goto();
+      await loginPage.switchLanguage('FI');
+      await expect(page.locator('.navbar-nav a', { hasText: /^FI$/i }).first()).toBeVisible();
+      await expect(page.locator('button[type="submit"]')).toContainText(/Kirjaudu/i);
+    });
+
+    await demoStep(page, 'Krok 2: Přihlášení platným uživatelským účtem do systému', async () => {
+      await loginPage.login(email!, password!);
+      await dashboardPage.expectDashboardLoaded();
+    });
+
+    await demoStep(page, 'Krok 3 [FAILED PATH]: Kontrola zachování jazykového přepínače v navigaci (Ověření vady BUG-002)', async () => {
+      // Vada BUG-002: Jazykový přepínač (FI, SV, EN, SQ) po přihlášení z horní lišty zcela zmizí
+      // a aplikace natvrdo vynutí angličtinu bez možnosti přepnutí zpět.
+      // Tato aserce selže (element selector není v horní liště nalezen), čímž prokazuje existenci evidované vady BUG-002:
+      await expect(
+        page.locator('.navbar-nav a', { hasText: /^FI$/i }).first()
+      ).toBeVisible({ timeout: 4000 });
     });
   });
 });

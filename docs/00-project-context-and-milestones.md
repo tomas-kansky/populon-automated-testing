@@ -81,11 +81,22 @@ Všechny byznysové scénáře jsou naprogramovány tak, aby se daly předvést 
 > ⚠️ **Důležité pro spuštění na Windows:**  
 > Otevři klasický **Windows PowerShell** nebo **Windows Terminál** (`Win + X` → *Terminál*) a zadej:
 
-```powershell
-cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:scenarios
-```
+- **Spustit všechny scénáře (včetně ukázky selhání BUG-002):**
+  ```powershell
+  npm run demo:scenarios
+  ```
+- **Spustit pouze 100% zelené scénáře (TC-001 až TC-004 bez selhání):**
+  ```powershell
+  npm run demo:pass
+  ```
+- **Spustit jednotlivý scénář samostatně:**
+  - `TC-001 (MK)`: `npm run demo:tc1`
+  - `TC-002 (AS)`: `npm run demo:tc2`
+  - `TC-003 (JM)`: `npm run demo:tc3`
+  - `TC-004 (TK)`: `npm run demo:tc4`
+  - Vada `BUG-002`: `npm run demo:bug002`
 
-*Nebo v Průzkumníku Windows poklepej na soubor [`run-demo.bat`](../run-demo.bat).*
+*Nebo v Průzkumníku Windows poklepej na soubor [`run-demo.bat`](../run-demo.bat), který nabízí interaktivní menu.*
 
 **Co se při demu stane na obrazovce:**
 1. Otevře se viditelné okno prohlížeče Chrome.

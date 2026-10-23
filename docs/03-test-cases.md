@@ -179,13 +179,17 @@ Tento přehled zrcadlí týmový pracovní list `BQAS | Otevřené otázky a ná
 
 ---
 
-## 5. Přehled automatizace v Playwrightu
+## 5. Přehled automatizace v Playwrightu a spouštěcí příkazy
 
-Všechny byznysové scénáře jsou plně automatizovány a připraveny k živé prezentaci:
+Všechny byznysové scénáře jsou plně automatizovány a připraveny k živé prezentaci ve zpomaleném režimu (`slowMo: 800ms`) s vizuálním in-browser HUD panelem:
 
-| Testovací soubor | Pokryté scénáře | Tagy | Příkaz pro živé promítání (PowerShell) |
-|---|---|---|---|
-| [`tests/scenarios.spec.ts`](../tests/scenarios.spec.ts) | • `TC-001 (MK)`<br>• `TC-002 (AS)`<br>• `TC-003 (JM)`<br>• `TC-004 (TK)` | `@scenarios`, `@tc001`, `@tc002`, `@tc003`, `@tc004`, `@demo` | `npm run demo:scenarios` |
-| [`tests/auth.spec.ts`](../tests/auth.spec.ts) | Ověření přihlášení, chybových hlášek a odhlášení | `@auth`, `@smoke` | `npx playwright test tests/auth.spec.ts` |
-| [`tests/dashboard.spec.ts`](../tests/dashboard.spec.ts) | Ověření nástěnky a jazykového přepínače | `@dashboard`, `@smoke` | `npx playwright test tests/dashboard.spec.ts` |
-| [`tests/search.spec.ts`](../tests/search.spec.ts) | Vyhledávání spolků a komunit | `@search`, `@smoke` | `npx playwright test tests/search.spec.ts` |
+| Režim spuštění | Popis a pokryté scénáře | Příkaz do Windows PowerShellu |
+|---|---|---|
+| **Všechny scénáře + vada BUG-002** | Spustí sekvenčně `TC-001` až `TC-004` (vše PASS) a na závěr test vady `BUG-002` (záměrný FAIL) | `npm run demo:scenarios` |
+| **Pouze 100% zelené scénáře (PASS)** | Spustí pouze `TC-001` až `TC-004` bez testu vady (100% úspěšnost pro prezentaci) | `npm run demo:pass` |
+| **Pouze TC-001 (MK)** | Vytvoření a publikace notifikace ve skupině (Matěj Kollár) | `npm run demo:tc1` |
+| **Pouze TC-002 (AS)** | Ochrana neveřejné notifikace před anonymem / RBAC (Adam Šolc) | `npm run demo:tc2` |
+| **Pouze TC-003 (JM)** | Časování zveřejnění notifikace dle Release date (Jan Mach) | `npm run demo:tc3` |
+| **Pouze TC-004 (TK)** | Správa členství, prevence duplicity a ochrana údajů (Tomáš Kanský) | `npm run demo:tc4` |
+| **Pouze vada BUG-002** | Živá ukázka selhání způsobeného zmizením jazykového přepínače | `npm run demo:bug002` |
+| **Interaktivní výběr (UI)** | Otevře Playwright UI okno pro výběr a krokování testů | `npm run demo:ui` |

@@ -1,4 +1,4 @@
-﻿import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 /**
@@ -23,19 +23,7 @@ export class DashboardPage extends BasePage {
   }
 
   async logout(): Promise<void> {
-    try {
-      if (await this.userProfileDropdown.isVisible({ timeout: 3000 })) {
-        await this.userProfileDropdown.click();
-        await this.page.waitForTimeout(500);
-      }
-      if (await this.logoutButton.isVisible({ timeout: 3000 })) {
-        await this.logoutButton.click();
-      } else {
-        await this.page.goto('/logout');
-      }
-    } catch {
-      await this.page.goto('/logout');
-    }
-    await this.waitForPageLoad();
+    // Přímá navigace na /logout spolehlivě ukončí uživatelskou session a přesměruje na /login
+    await this.page.goto('/logout', { waitUntil: 'domcontentloaded' });
   }
 }
