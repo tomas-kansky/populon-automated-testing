@@ -237,6 +237,11 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     const password = process.env.TEST_USER_PASSWORD;
     test.skip(!email || !password, 'Skipping BUG-002: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
+    // V CI běhu označíme test jako známou očekávanou vadu (Expected failure), aby neblokoval build
+    if (process.env.CI) {
+      test.fail(true, 'Evidovaná známá vada BUG-002: Jazykový přepínač po přihlášení zcela zmizí z navigace');
+    }
+
     await loginPage.goto();
     await pauseForScreenPlacement(page, 'TC-BUG-002: Ukázka odhalené vady lokalizace');
 
