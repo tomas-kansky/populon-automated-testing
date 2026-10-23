@@ -1,9 +1,15 @@
-﻿{
+{
   "name": "populon-automated-testing",
   "version": "1.0.0",
   "description": "Automated End-to-End (E2E) testing suite for Populon (demo.populon.app) built with Playwright and TypeScript using the Page Object Model (POM).",
   "main": "index.js",
   "scripts": {
+    "demo": "playwright test --config=playwright.demo.config.ts",
+    "demo:ui": "playwright test --config=playwright.demo.config.ts --ui",
+    "demo:smoke": "playwright test --config=playwright.demo.config.ts --grep @smoke",
+    "demo:auth": "playwright test --config=playwright.demo.config.ts tests/auth.spec.ts",
+    "demo:search": "playwright test --config=playwright.demo.config.ts tests/search.spec.ts",
+    "demo:dashboard": "playwright test --config=playwright.demo.config.ts tests/dashboard.spec.ts",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",

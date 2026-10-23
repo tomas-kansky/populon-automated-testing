@@ -1,4 +1,4 @@
-﻿# 🎭 Populon Automated E2E Testing Suite
+# 🎭 Populon Automated E2E Testing Suite
 
 <p align="center">
   <a href="https://github.com/tomas-kansky/populon-automated-testing/actions/workflows/playwright.yml">
@@ -24,6 +24,8 @@ An automated End-to-End (E2E) test automation suite designed for [Populon](https
 
 ## 🌟 Highlights
 
+- 🎬 **One-Click Live Demo Mode (`slowMo`)**: Dedicated slow-motion visual runner (`npm run demo` / `run-demo.bat`) executing tests sequentially (`workers: 1`, `800ms` delay per action) for live classroom and stakeholder presentations.
+- 📚 **Single Source of Truth (`docs/` & `AGENTS.md`)**: Complete repository of functional specifications, test strategy, business test cases (`TC-001`–`TC-003`), defect reports, and milestone tracking for the **Zajištění kvality (BQAS)** course.
 - 🏛️ **Page Object Model (POM)**: Robust architecture cleanly separating test specifications from application locators and UI logic.
 - ⚡ **Playwright Framework**: High-performance test execution with built-in auto-waiting, isolated browser contexts, and trace debugging.
 - 🧩 **Custom Test Fixtures**: Dependency-injected page instances (`loginPage`, `dashboardPage`, `searchPage`) via typed Playwright fixtures.
@@ -34,32 +36,74 @@ An automated End-to-End (E2E) test automation suite designed for [Populon](https
 
 ---
 
+## 🎬 Live Slow-Motion Demo (One-Click Presentation)
+
+To demonstrate the automated tests live during a consultation or presentation in a **visible browser window with slow-motion steps (`800ms` per action)**:
+
+1. **Windows One-Click Launcher:** Double-click [`run-demo.bat`](run-demo.bat) in the project root.
+2. **Single Command (Terminal):**
+   ```bash
+   npm run demo
+   ```
+3. **Interactive Visual Picker (Playwright UI with Slow-Mo):**
+   ```bash
+   npm run demo:ui
+   ```
+
+---
+
+## 📚 QA Documentation & Course Milestones (`docs/`)
+
+This repository acts as the **Single Source of Truth (SSOT)** for the **Zajištění kvality (BQAS)** course (team `uu_2026_BQAS_team_1`), keeping all artifacts structured and ready for export to **uuManagementKit**, **Excel**, and **Word**:
+
+| Document | Milestone | Description |
+|---|---|---|
+| [`AGENTS.md`](AGENTS.md) | All | AI Agent instructions, domain context, and repository conventions |
+| [`docs/00-project-context-and-milestones.md`](docs/00-project-context-and-milestones.md) | M1–M4 | Overview of all 4 milestones, grading (40 pts), and deliverable mapping |
+| [`docs/01-functional-specification.md`](docs/01-functional-specification.md) | M1–M2 | Verbatim **Populon Core — Functional Specification** (`@Lenka`) + Requirement IDs (`REQ-*`) |
+| [`docs/02-test-strategy.md`](docs/02-test-strategy.md) | M1–M4 | Full **Test Strategy** (CZ & EN versions) + 11-point team brainstorming table |
+| [`docs/03-test-cases.md`](docs/03-test-cases.md) | M1–M3 | 12-field **Test Case Template**, Business Test Cases (`TC-001`–`TC-003`), and test ideas backlog |
+| [`docs/04-defect-reports.md`](docs/04-defect-reports.md) | M3 | **Defect Report Template** and registry for up to 5 bugs found during cross-testing |
+| [`docs/05-test-report.md`](docs/05-test-report.md) | M4 | **Test Summary Report** (Executive summary, metrics, and charts across TCs & defects) |
+
+---
+
 ## 📂 Project Structure
 
 ```text
 populon-automated-testing/
 ├── .github/
 │   └── workflows/
-│       └── playwright.yml         # GitHub Actions CI & Scheduled Cron
+│       └── playwright.yml                    # GitHub Actions CI & Scheduled Cron
+├── docs/                                     # Single Source of Truth (BQAS Deliverables)
+│   ├── 00-project-context-and-milestones.md  # Course milestones & grading breakdown
+│   ├── 01-functional-specification.md        # Populon Core functional spec & REQ matrix
+│   ├── 02-test-strategy.md                   # Test Strategy (CZ, EN & Excel brainstorming)
+│   ├── 03-test-cases.md                      # TC template, TC-001..003 & test backlog
+│   ├── 04-defect-reports.md                  # Bug report template & defect log (max 5)
+│   └── 05-test-report.md                     # Final Test Summary Report & charts
 ├── src/
-│   ├── pages/                     # Page Object Model layer
-│   │   ├── BasePage.ts            # Common helpers (language switcher, wait methods)
-│   │   ├── LoginPage.ts           # Login screen locators, validations & actions
-│   │   ├── DashboardPage.ts       # Authenticated dashboard verifications & logout
-│   │   └── SearchPage.ts          # Group & community discovery interactions
+│   ├── pages/                                # Page Object Model layer
+│   │   ├── BasePage.ts                       # Common helpers (language switcher, wait methods)
+│   │   ├── LoginPage.ts                      # Login screen locators, validations & actions
+│   │   ├── DashboardPage.ts                  # Authenticated dashboard verifications & logout
+│   │   └── SearchPage.ts                     # Group & community discovery interactions
 │   └── fixtures/
-│       └── testFixtures.ts        # Extended Playwright test fixture definitions
+│       └── testFixtures.ts                   # Extended Playwright test fixture definitions
 ├── tests/
-│   ├── auth.spec.ts               # Authentication suite (positive, negative, recovery, logout)
-│   ├── search.spec.ts             # Community search & exploration suite
-│   └── dashboard.spec.ts          # Authenticated dashboard & localization suite
-├── .env.example                   # Environment variable template
-├── .gitignore                     # Git ignore configuration
-├── LICENSE                        # MIT License
-├── package.json                   # Dependencies and npm scripts
-├── playwright.config.ts           # Playwright runner configuration
-├── tsconfig.json                  # TypeScript compiler settings
-└── README.md                      # Project documentation
+│   ├── auth.spec.ts                          # Authentication suite (positive, negative, recovery, logout)
+│   ├── search.spec.ts                        # Community search & exploration suite
+│   └── dashboard.spec.ts                     # Authenticated dashboard & localization suite
+├── AGENTS.md                                 # Context & instructions for AI agents
+├── .env.example                              # Environment variable template
+├── .gitignore                                # Git ignore configuration
+├── LICENSE                                   # MIT License
+├── package.json                              # Dependencies and npm scripts
+├── playwright.config.ts                      # Standard & CI Playwright configuration
+├── playwright.demo.config.ts                 # Slow-Motion Live Demo Playwright configuration
+├── run-demo.bat                              # One-click Windows launcher for Live Demo
+├── tsconfig.json                             # TypeScript compiler settings
+└── README.md                                 # Project documentation
 ```
 
 ---
@@ -108,18 +152,21 @@ TEST_USER_PASSWORD=your_password
 
 ---
 
-## 💻 Running Tests Locally
+## 💻 Running Tests & Live Demo Locally
 
 | Command | Description |
 |---|---|
-| `npm test` | Run all 11 test scenarios in headless mode |
+| `npm run demo` | **Live Demo Mode**: Run all tests sequentially in a visible browser with `800ms` Slow-Mo |
+| `npm run demo:ui` | **Interactive Demo UI**: Open Playwright UI runner with `800ms` Slow-Mo enabled |
+| `npm run demo:smoke` | Run `@smoke` tests in visible Slow-Mo Demo mode |
+| `npm test` | Run all 11 test scenarios in fast headless mode |
 | `npm run test:smoke` | Run core smoke tests (`@smoke`) |
 | `npm run test:regression` | Run regression tests (`@regression`) |
 | `npm run test:auth` | Run authentication test suite |
 | `npm run test:search` | Run community search test suite |
 | `npm run test:dashboard` | Run dashboard & navigation test suite |
-| `npm run test:ui` | Open Playwright interactive UI mode |
-| `npm run test:headed` | Run tests with visible browser window |
+| `npm run test:ui` | Open Playwright interactive UI mode (normal speed) |
+| `npm run test:headed` | Run tests with visible browser window (normal speed) |
 | `npm run report` | Open latest HTML test report |
 | `npm run lint` | Run TypeScript type checks (`tsc --noEmit`) |
 

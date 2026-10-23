@@ -1,4 +1,4 @@
-﻿node_modules/
+node_modules/
 dist/
 /test-results/
 /playwright-report/
@@ -12,6 +12,7 @@ blob-report/
 
 # Internal work logs & tracking (kept local)
 work-logs/
+*.code-workspace
 
 # OS files
 .DS_Store
