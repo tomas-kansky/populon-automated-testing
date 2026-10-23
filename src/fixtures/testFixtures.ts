@@ -1,12 +1,18 @@
-﻿import { test as base } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { DashboardPage } from '../pages/DashboardPage';
 import { SearchPage } from '../pages/SearchPage';
+import { SocietyPage } from '../pages/SocietyPage';
+import { NotificationDetailPage } from '../pages/NotificationDetailPage';
+import { MemberCardPage } from '../pages/MemberCardPage';
 
 type AppFixtures = {
   loginPage: LoginPage;
   dashboardPage: DashboardPage;
   searchPage: SearchPage;
+  societyPage: SocietyPage;
+  notificationDetailPage: NotificationDetailPage;
+  memberCardPage: MemberCardPage;
 };
 
 export const test = base.extend<AppFixtures>({
@@ -21,6 +27,18 @@ export const test = base.extend<AppFixtures>({
   searchPage: async ({ page }, use) => {
     const searchPage = new SearchPage(page);
     await use(searchPage);
+  },
+  societyPage: async ({ page }, use) => {
+    const societyPage = new SocietyPage(page);
+    await use(societyPage);
+  },
+  notificationDetailPage: async ({ page }, use) => {
+    const notificationDetailPage = new NotificationDetailPage(page);
+    await use(notificationDetailPage);
+  },
+  memberCardPage: async ({ page }, use) => {
+    const memberCardPage = new MemberCardPage(page);
+    await use(memberCardPage);
   },
 });
 

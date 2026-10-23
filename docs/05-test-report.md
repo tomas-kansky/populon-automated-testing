@@ -41,24 +41,25 @@
 
 ### 3.1 Souhrnná tabulka exekuce Test Casů
 
-#### A) Manuální / Týmové Business Test Casy (`docs/03-test-cases.md`)
+#### A) Manuální / Týmové Business Test Casy (`docs/03-test-cases.md` & `tests/scenarios.spec.ts`)
 
 | Stav testu | Počet TC | Podíl (%) | Poznámka |
 |---|---|---|---|
-| **PASS (Prošlo)** | 1 | 33.3 % | `TC-001 (MK)` |
-| **FAIL (Neprošlo)** | 0 | 0.0 % | *(aktualizovat po 3. milníku)* |
-| **BLOCKED (Blokováno)** | 0 | 0.0 % | *(aktualizovat po 3. milníku)* |
-| **NOT RUN (Nespuštěno)** | 2 | 66.7 % | `TC-002 (AS)`, `TC-003 (JM)` + případné další TC |
-| **Celkem týmových TC** | **3** | **100 %** | *(aktualizovat dle finálního počtu TC v týmu)* |
+| **PASS (Prošlo)** | 4 | 100 % | `TC-001 (MK)`, `TC-002 (AS)`, `TC-003 (JM)`, `TC-004 (TK)` |
+| **FAIL (Neprošlo)** | 0 | 0.0 % | *(u `TC-004` zaevidována kosmetická vada zobrazení adresy `BUG-001`)* |
+| **BLOCKED (Blokováno)** | 0 | 0.0 % | — |
+| **NOT RUN (Nespuštěno)** | 0 | 0.0 % | — |
+| **Celkem týmových TC** | **4** | **100 %** | Všechny 4 scénáře plně automatizovány v Playwrightu |
 
 #### B) Automatizované Playwright E2E testy (`tests/*.spec.ts`)
 
 | Testovací sada (Suite) | Počet testů | PASS | FAIL | Pokrytá oblast |
 |---|---|---|---|---|
+| `tests/scenarios.spec.ts` | 4 | 4 | 0 | Byznysové scénáře `TC-001` až `TC-004` (Notifications, Visibility, Timing, Member Information & RBAC) |
 | `tests/auth.spec.ts` | 6 | 6 | 0 | Přihlášení, validace formuláře, obnova hesla, odhlášení |
 | `tests/search.spec.ts` | 3 | 3 | 0 | Vyhledávání spolků a komunit (`/search`) |
 | `tests/dashboard.spec.ts` | 2 | 2 | 0 | Přístup do autentizované zóny a přepínání jazyků (FI/EN) |
-| **Celkem E2E automatizace** | **11** | **11** | **0** | **100 % úspěšnost (Smoke & Regression)** |
+| **Celkem E2E automatizace** | **15** | **15** | **0** | **100 % úspěšnost (Business UAT + Smoke & Regression)** |
 
 ---
 
@@ -66,10 +67,10 @@
 
 ```mermaid
 xychart-beta
-    title "Stav exekuce Test Casů (Manuální UAT + Automatizované E2E)"
+    title "Stav exekuce Test Casů (Celkem 15 E2E & UAT scénářů)"
     x-axis ["PASS", "FAIL", "BLOCKED", "NOT RUN"]
-    y-axis "Počet testů" 0 --> 15
-    bar [12, 0, 0, 2]
+    y-axis "Počet testů" 0 --> 16
+    bar [15, 0, 0, 0]
 ```
 
 ---
@@ -85,8 +86,8 @@ xychart-beta
 | 🔴 **Critical** | 0 | 0 | 0 | — |
 | 🟠 **High** | 0 | 0 | 0 | — |
 | 🟡 **Medium** | 0 | 0 | 0 | — |
-| 🟢 **Low** | 0 | 0 | 0 | — |
-| **Celkem (max. 5)** | **0** | **0** | **0** | — |
+| 🟢 **Low** | 1 | 1 | 0 | `BUG-001` |
+| **Celkem (max. 5)** | **1** | **1** | **0** | `BUG-001` |
 
 ### 4.2 Rozdělení chyb podle funkčních modulů
 

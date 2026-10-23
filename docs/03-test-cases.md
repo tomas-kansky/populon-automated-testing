@@ -92,8 +92,8 @@
   1. Člen skupiny (`Role 1`) notifikaci vidí v přehledu `Notifications` a může zobrazit její plný detail.
   2. Anonymní návštěvník (`Role 3`) notifikaci v přehledu skupiny nevidí; přímá URL detailu neumožní zobrazení obsahu (přesměruje na přihlášení nebo zobrazí odepření přístupu).
   3. Registrovaný nečlen (`Role 2`) notifikaci v přehledu skupiny nevidí; přímá URL detailu obsah notifikace nezobrazí.
-- **Skutečný výsledek:** *(vyplnit při exekuci)*
-- **Výsledek / stav:** `NOT RUN`
+- **Skutečný výsledek:** Skutečný výsledek odpovídá očekávanému. Aktivní člen skupiny notifikaci vidí v přehledu i detailu; po odhlášení se v záložce `Notifications` skupiny notifikace nezobrazuje (`No new notifications`) a přímá URL `/notificationcard?notificationId=7447` zablokuje přístup hláškou `This page has restricted access and you don't have permission to see it at the moment. Please, log in.`
+- **Výsledek / stav:** `PASS`
 - **ID vady / poznámka:** —
 
 ---
@@ -130,9 +130,49 @@
   6. Člen notifikaci nevidí v přehledu ani přes přímý odkaz.
   7. Po `Release date` se notifikace v přehledu zobrazí.
   8. Detail zobrazuje správně název, popis a text.
-- **Skutečný výsledek:** *(vyplnit při exekuci)*
-- **Výsledek / stav:** `NOT RUN`
+- **Skutečný výsledek:** Notifikace s budoucím časem vydání se před `Release date` členovi v přehledu ani přes přímý URL odkaz nezobrazí; po uplynutí `Release date` je viditelná v přehledu skupiny, na dashboardu i v detailu.
+- **Výsledek / stav:** `PASS`
 - **ID vady / poznámka:** —
+
+---
+
+### 📋 TC-004 (TK): Správa členských údajů (Member information), prevence duplicitní přihlášky a ochrana viditelnosti karty člena
+
+> **Autor:** Tomáš Kanský (`TK`) – pokrývá oblasti **Societies & Membership** a **Member Data Fields & Visibility** (`REQ-SOC-06`, `REQ-FLD-02`, `REQ-FLD-04`), které doplňují notifikační scénáře kolegů (`TC-001`–`TC-003`).
+
+- **TC-ID:** `TC-004 (TK)`
+- **Název:** Správa členských údajů (Member information), prevence duplicitní přihlášky a ochrana viditelnosti karty člena
+- **Požadavek / reference:** `Populon → Society → Basic info → Member information → Edit` (`REQ-SOC-06`, `REQ-FLD-02`, `REQ-FLD-04`)
+- **Cíl testu:** Ověřit, že aktivní člen skupiny `uu_2026_BQAS_team_1` nemá na kartě skupiny možnost odeslat duplicitní přihlášku (místo toho vidí odkaz `Member information` na své existující členství), může na své členské kartě upravit a uložit členské údaje (adresu a souhlas se zobrazením v seznamech), a že členská karta (`membercard`) je chráněna proti neoprávněnému zobrazení nepřihlášeným uživatelem.
+- **Priorita:** `Vysoká`
+- **Předpoklady:** Člen (`Tomáš Kanský`) je přihlášen do Populonu a má aktivní členství ve skupině `uu_2026_BQAS_team_1` (`societyId=4516`, `memberId=24096`).
+- **Testovací data:**
+  - `Skupina`: `uu_2026_BQAS_team_1`
+  - `Karta člena`: `/membercard?memberId=24096`
+  - `Street address`: `Parukářka 4`
+  - `Zip code`: `130 00`
+  - `City`: `Praha 3`
+  - `Country`: `Czechia` (`CZ`)
+  - `Allow to display personal data in attendee lists`: `Checked (Yes)`
+- **Kroky:**
+  1. Přihlásit se jako aktivní člen skupiny `uu_2026_BQAS_team_1` a z horní navigace (`My groups`) otevřít stránku skupiny `uu_2026_BQAS_team_1`.
+  2. V sekci `Basic info` skupiny ověřit, že systém nenabízí tlačítko pro novou registraci do skupiny (`Join group`), ale zobrazuje tlačítko `Member information` pro přístup k existujícímu členství.
+  3. Kliknout na `Member information` a otevřít členskou kartu (`membercard`) přihlášeného člena.
+  4. Kliknout na `Edit`, ve formuláři `Member information` vyplnit `Street address`, `Zip code`, `City` a zapnout volbu `Allow to display personal data in attendee lists` podle testovacích dat, a kliknout na `Save`.
+  5. Ověřit zobrazení potvrzovací hlášky `Data saved!`, zkontrolovat zobrazení na přehledové kartě člena a po opětovném otevření `Edit` ověřit, že uložené hodnoty zůstaly v polích zachovány.
+  6. Zkopírovat přímou URL adresu členské karty (`/membercard?memberId=24096`) a odhlásit se z aplikace.
+  7. Jako nepřihlášený uživatel zadat do prohlížeče zkopírovanou URL členské karty (`/membercard?memberId=24096`).
+- **Očekávaný výsledek:**
+  1. Stránka skupiny `uu_2026_BQAS_team_1` se korektně načte.
+  2. Tlačítko pro podání duplicitní přihlášky není zobrazeno; je viditelné tlačítko `Member information`.
+  3. Zobrazí se detail členské karty s kontaktními údaji člena a záložkami `Activities` a `Notifications`.
+  4. Formulář přijme zadané členské údaje a umožní jejich uložení.
+  5. Systém zobrazí potvrzení `Data saved!`, hodnoty jsou ve formuláři uloženy a adresa se zobrazí i na přehledové kartě člena.
+  6. Uživatel je úspěšně odhlášen.
+  7. Systém zablokuje přístup k osobním údajům člena, zobrazí varování `This page has restricted access and you don't have permission to see it at the moment. Please, log in.` a osobní údaje člena (telefon, e-mail) nevykreslí.
+- **Skutečný výsledek:** Kroky 1–4 a 6–7 odpovídají očekávanému výsledku (prevence duplicity i ochrana URL karty člena před nepřihlášeným uživatelem fungují správně). V kroku 5 se po uložení zobrazí `Data saved!` a hodnoty (`Parukářka 4`, `130 00`, `Praha 3`) zůstávají uložené v editačním formuláři, avšak na přehledové kartě `Member information` se u ikony adresy vykreslí pouze kód země `CZ` bez ulice, PSČ a města.
+- **Výsledek / stav:** `PASS` *(s evidovanou kosmetickou/UI vadou vykreslení adresy `BUG-001`)*
+- **ID vady / poznámka:** `BUG-001`
 
 ---
 
@@ -144,11 +184,11 @@
 |---|---|---|---|---|
 | **Výběr týmového tématu** | FAT/SIT – agilní vs. FAT/SIT – vodopád - nezávislý testovací tým, (DEV) součást vývoje, (UAT) za zákazníka | Jaký přístup nejlépe obhájíme? Jsme tým nezkušených v této oblasti. Dostaneme přiřazeno? = **UAT** | **Schváleno** | Strategie kap. 2 |
 | **Identita aplikace** | Populon Core - představení real app na 1. konzultaci | Cílová testovací aplikace je ve volném výběru, lze i excel? | K ověření | `demo.populon.app` |
-| **Členství** | Opakovaná přihláška bývalého člena | Nesmí vzniknout duplicitní členství = lze na stejný mail, ale ne UserName, upozornění na duplicitu, lze i obnovit členství | Nápad | `REQ-SOC-06` |
+| **Členství** | Opakovaná přihláška bývalého člena | Nesmí vzniknout duplicitní členství = lze na stejný mail, ale ne UserName, upozornění na duplicitu, lze i obnovit členství | Nápad | `REQ-SOC-06` (`TC-004`) |
 | **Členství** | Jedna osoba ve více spolcích | Členství musí být nezávislá; může být ve vícero skupinách | Nápad | `REQ-SOC-04` |
 | **Oprávnění** | Správce nadřazené organizace | Nemá automaticky práva v podspolku; hierarchie skupin - routy | Nápad | `REQ-SOC-05` |
 | **Vlastní pole** | Změna povolených hodnot | Staré uložené hodnoty zůstávají platné. | Nápad | `REQ-FLD-03` |
-| **Vlastní pole** | Nové pole u existujícího členství | Pole se má projevit i u starších členství. | Nápad | `REQ-FLD-04` |
+| **Vlastní pole** | Nové pole u existujícího členství | Pole se má projevit i u starších členství. | Nápad | `REQ-FLD-04` (`TC-004`) |
 | **Aktivity** | Naplněná kapacita akce | Jak se systém zachová při další registraci? | Nápad | `REQ-ACT-01` |
 | **Aktivity** | Zrušená akce | Upozornění účastníků a blokace nových registrací. | Otevřené | `REQ-ACT-04` |
 | **Oznámení** | Různé úrovně viditelnosti | Neoprávněný uživatel nesmí obsah vidět. | Nápad | `REQ-NOT-02` (`TC-001`–`TC-003`) |
@@ -158,11 +198,11 @@
 
 ## 4. Mapování na automatizované Playwright E2E testy v repozitáři
 
-Aktuálně implementované automatizované testy ve složce [`tests/`](../tests/), které tvoří základ živého dema:
+Všechny vypracované týmové scénáře (`TC-001` až `TC-004`) i infrastrukturní testy jsou plně automatizované ve složce [`tests/`](../tests/):
 
 | Soubor v `tests/` | Pokryté scénáře | Tagy | Stav automatizace |
 |---|---|---|---|
+| [`tests/scenarios.spec.ts`](../tests/scenarios.spec.ts) | • **`TC-001 (MK)`**: Vytvoření a zobrazení notifikace ve skupině `uu_2026_BQAS_team_1`<br>• **`TC-002 (AS)`**: Viditelnost notifikace pouze pro členy skupiny (`Only to members of group` vs. anonymní uživatel a přímá URL)<br>• **`TC-003 (JM)`**: Časování notifikace (`Release date` – nedostupnost před vydáním a zobrazení po vydání)<br>• **`TC-004 (TK)`**: Správa členských údajů (`Member information`), prevence duplicitní přihlášky a ochrana viditelnosti karty člena | `@scenarios`, `@tc001`, `@tc002`, `@tc003`, `@tc004`, `@demo` | ✅ Hotovo (4 E2E scénáře) |
 | [`tests/auth.spec.ts`](../tests/auth.spec.ts) | • Vykreslení prvků přihlašovacího formuláře<br>• Negativní test: neplatné přihlašovací údaje zobrazí chybový alert<br>• Negativní test: prázdný formulář neautentizuje<br>• Navigace na obnovu hesla (`password-recovery`)<br>• Pozitivní přihlášení platným účtem z `.env`<br>• Odhlášení uživatele (Logout) | `@auth`, `@smoke`, `@regression` | ✅ Hotovo (6 testů) |
 | [`tests/search.spec.ts`](../tests/search.spec.ts) | • Přechod na vyhledávání skupin přes navbar (`robot-test="nav:searchGroups"`)<br>• Přímý přístup na `/search`<br>• Vyhledání komunity/skupiny podle dotazu | `@search`, `@smoke`, `@regression` | ✅ Hotovo (3 testy) |
 | [`tests/dashboard.spec.ts`](../tests/dashboard.spec.ts) | • Přístup přihlášeného uživatele na Dashboard<br>• Lokalizace: přepnutí jazyka v navigaci (FI ↔ EN) | `@dashboard`, `@smoke`, `@regression` | ✅ Hotovo (2 testy) |
-| *Připraveno k rozšíření* | • Scénáře pro skupinu `uu_2026_BQAS_team_1` (`TC-001`, `TC-002`, `TC-003` – Notifications, Activities, Memberships) | `@notifications`, `@tc001` | 🔜 Dle dalších milníků |

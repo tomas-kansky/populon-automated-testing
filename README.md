@@ -87,10 +87,14 @@ populon-automated-testing/
 │   │   ├── BasePage.ts                       # Common helpers (language switcher, wait methods)
 │   │   ├── LoginPage.ts                      # Login screen locators, validations & actions
 │   │   ├── DashboardPage.ts                  # Authenticated dashboard verifications & logout
-│   │   └── SearchPage.ts                     # Group & community discovery interactions
+│   │   ├── SearchPage.ts                     # Group & community discovery interactions
+│   │   ├── SocietyPage.ts                    # Group card (/societycard), tabs & notifications
+│   │   ├── NotificationDetailPage.ts         # Notification detail & access restriction checks
+│   │   └── MemberCardPage.ts                 # Member card (/membercard) & profile editing
 │   └── fixtures/
 │       └── testFixtures.ts                   # Extended Playwright test fixture definitions
 ├── tests/
+│   ├── scenarios.spec.ts                     # BQAS Business Test Cases (TC-001 to TC-004)
 │   ├── auth.spec.ts                          # Authentication suite (positive, negative, recovery, logout)
 │   ├── search.spec.ts                        # Community search & exploration suite
 │   └── dashboard.spec.ts                     # Authenticated dashboard & localization suite
@@ -112,6 +116,7 @@ populon-automated-testing/
 
 | Suite | File | Tags | Scenarios Covered |
 |---|---|---|---|
+| **BQAS Business Scenarios** | `tests/scenarios.spec.ts` | `@scenarios`, `@tc001`–`@tc004`, `@demo` | • **`TC-001 (MK)`**: Creation & display of group notification in `uu_2026_BQAS_team_1`<br>• **`TC-002 (AS)`**: Notification visibility restricted to group members (`Only to members of group` vs. anonymous & direct URL)<br>• **`TC-003 (JM)`**: Notification release timing (`Release date` before vs. after publication)<br>• **`TC-004 (TK)`**: Member information management, duplicate membership prevention & GDPR access restriction |
 | **Authentication** | `tests/auth.spec.ts` | `@auth`, `@smoke`, `@regression` | • Form controls rendering<br>• Negative: Invalid credentials alert<br>• Negative: Empty credentials submission<br>• Navigation: Password recovery redirect<br>• Positive: Authenticated login from `.env`<br>• Session: User logout sequence |
 | **Community Search** | `tests/search.spec.ts` | `@search`, `@smoke`, `@regression` | • Navbar button redirection (`robot-test="nav:searchGroups"`)<br>• Direct URL access to `/search`<br>• Query submission & results check |
 | **Dashboard** | `tests/dashboard.spec.ts` | `@dashboard`, `@smoke`, `@regression` | • Authenticated dashboard access<br>• Navbar language switching (FI ↔ EN) |
@@ -156,10 +161,12 @@ TEST_USER_PASSWORD=your_password
 
 | Command | Description |
 |---|---|
-| `npm run demo` | **Live Demo Mode**: Run all tests sequentially in a visible browser with `800ms` Slow-Mo |
+| `npm run demo:scenarios` | **Live Demo (`TC-001`–`TC-004`)**: Run the 4 BQAS business scenarios in `800ms` Slow-Mo |
+| `npm run demo` | **Live Demo Mode (All)**: Run all 15 tests sequentially in a visible browser with `800ms` Slow-Mo |
 | `npm run demo:ui` | **Interactive Demo UI**: Open Playwright UI runner with `800ms` Slow-Mo enabled |
 | `npm run demo:smoke` | Run `@smoke` tests in visible Slow-Mo Demo mode |
-| `npm test` | Run all 11 test scenarios in fast headless mode |
+| `npm test` | Run all 15 test scenarios in fast headless mode |
+| `npm run test:scenarios` | Run BQAS business scenarios (`TC-001`–`TC-004`) in headless mode |
 | `npm run test:smoke` | Run core smoke tests (`@smoke`) |
 | `npm run test:regression` | Run regression tests (`@regression`) |
 | `npm run test:auth` | Run authentication test suite |

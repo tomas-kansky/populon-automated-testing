@@ -42,32 +42,34 @@
 
 | ID vady | Název chyby | Vazba na TC | Závažnost | Priorita | Stav | Nahlásil |
 |---|---|---|---|---|---|---|
-| **BUG-001** | *(Připraveno k vyplnění při křížovém testování v 3. milníku)* | `TC-...` | — | — | `New` | — |
-| **BUG-002** | *(Připraveno k vyplnění)* | `TC-...` | — | — | `New` | — |
+| **BUG-001** | Member information: Uložená adresa člena (`Street address`, `Zip code`, `City`) se po uložení nevykreslí na přehledové kartě člena | `TC-004 (TK)` | `Low` (Minor) | `P3` | `New` | `TK` |
+| **BUG-002** | *(Připraveno k vyplnění při křížovém testování v 3. milníku)* | `TC-...` | — | — | `New` | — |
 | **BUG-003** | *(Připraveno k vyplnění)* | `TC-...` | — | — | `New` | — |
 | **BUG-004** | *(Připraveno k vyplnění)* | `TC-...` | — | — | `New` | — |
 | **BUG-005** | *(Připraveno k vyplnění)* | `TC-...` | — | — | `New` | — |
 
 ---
 
-## 4. Detailní karty chyb (Šablona k nakopírování pro BUG-001 až BUG-005)
+## 4. Detailní karty chyb (pro přenos do uuManagementKit / Excelu)
 
-### 🐞 BUG-001: [Název chyby]
-- **Vazba na TC / Požadavek:** `TC-XXX` / `REQ-XXX-XX`
-- **Nahlásil:** `[Iniciály]` | **Datum:** `2026-XX-XX`
-- **Závažnost (Severity):** `Critical / High / Medium / Low`
-- **Priorita:** `P1 / P2 / P3 / P4`
+### 🐞 BUG-001: Member information: Uložená adresa člena (Street address, Zip code, City) se po uložení nevykreslí na přehledové kartě člena
+- **Vazba na TC / Požadavek:** `TC-004 (TK)` / `REQ-FLD-04`
+- **Nahlásil:** `TK` (Tomáš Kanský) | **Datum:** `2026-10-23`
+- **Závažnost (Severity):** `Low` (Minor / UI zobrazení uložených dat)
+- **Priorita:** `P3` (Medium)
 - **Stav:** `New`
-- **Prostředí:** `https://demo.populon.app` | Skupina: `uu_2026_BQAS_team_1` | Prohlížeč: Chromium / Chrome
+- **Prostředí:** `https://demo.populon.app/membercard?memberId=24096` | Skupina: `uu_2026_BQAS_team_1` (`societyId=4516`) | Prohlížeč: Chromium / Chrome
 - **Předpoklady:**
-  - ...
+  - Uživatel je přihlášen jako aktivní člen skupiny `uu_2026_BQAS_team_1` a nachází se na své členské kartě (`/membercard?memberId=24096`).
 - **Kroky k reprodukci:**
-  1. ...
-  2. ...
-  3. ...
+  1. Na členské kartě `Member information` (`/membercard?memberId=24096`) kliknout na tlačítko `Edit`.
+  2. Vyplnit pole `Street address`: `Parukářka 4`, `Zip code`: `130 00`, `City`: `Praha 3` a `Country`: `Czechia`.
+  3. Kliknout na tlačítko `Save`.
+  4. Zkontrolovat zobrazenou adresu v přehledovém panelu `Member information` u ikony lokace (`glyphicon-map-marker`).
+  5. Znovu kliknout na `Edit` a zkontrolovat hodnoty v polích formuláře.
 - **Očekávaný výsledek:**
-  - ...
+  - Po uložení (`Data saved!`) se v přehledovém panelu `Member information` u ikony adresy zobrazí kompletní uložená adresa (`Parukářka 4, 130 00 Praha 3, CZ`).
 - **Skutečný výsledek:**
-  - ...
+  - Přestože systém vypíše hlášku `Data saved!` a při opětovném otevření `Edit` jsou hodnoty `Parukářka 4`, `130 00` a `Praha 3` v databázi uloženy, přehledová karta `Member information` u ikony adresy vykreslí pouze dvoupísmenný kód země `CZ` a ulici, PSČ i město zcela vynechá. *(Technická poznámka z DOM: u pole `Zip code` je navíc chybně přiřazen atribut `robot-test="memberForm:address.city"`).*
 - **Přílohy / Poznámka:**
-  - ...
+  - Reprodukováno automatizovaným testem `TC-004 (TK)` v `tests/scenarios.spec.ts`.
