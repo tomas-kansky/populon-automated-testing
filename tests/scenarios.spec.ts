@@ -234,6 +234,13 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       await loginPage.switchLanguage('FI');
       await expect(page.locator('.navbar-nav a', { hasText: /^FI$/i }).first()).toBeVisible();
       await expect(page.locator('button[type="submit"]')).toContainText(/Kirjaudu/i);
+
+      // Interaktivní pozastavení před přihlášením: ukázka funkčního přepínače a finštiny
+      await pauseForInspection(
+        page,
+        'Výchozí stav: Finský jazyk (FI) a přítomný jazykový přepínač před přihlášením',
+        'Všimněte si: přihlašovací formulář je ve finštině ("Kirjaudu") a vpravo nahoře je dostupný přepínač (FI, SV, EN, SQ). Nyní stiskněte Enter pro přihlášení.'
+      );
     });
 
     await demoStep(page, 'Krok 2: Přihlášení platným uživatelským účtem do systému', async () => {
