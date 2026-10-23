@@ -1,38 +1,46 @@
-﻿import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+const isCI = !!process.env.CI;
+const isHeadless = isCI || process.env.HEADLESS === 'true';
+const slowMoMs = isHeadless ? 0 : Number(process.env.SLOW_MO || 800);
+
 export default defineConfig({
   testDir: './tests',
-  /* Timeout per individual test */
-  timeout: 30 * 1000,
+  /* Extended timeout per individual test to accommodate live slow-mo demo */
+  timeout: isHeadless ? 30 * 1000 : 90 * 1000,
   expect: {
-    timeout: 7000,
+    timeout: 10000,
   },
-  /* Run tests in parallel locally, sequentially in CI */
-  fullyParallel: true,
+  /* Run sequentially in a single visible window locally so the live demo is easy to follow */
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code */
-  forbidOnly: !!process.env.CI,
+  forbidOnly: isCI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Workers: default locally, 1 on CI */
-  workers: process.env.CI ? 1 : undefined,
+  retries: isCI ? 2 : 0,
+  /* Single worker so tests project one by one on screen */
+  workers: 1,
   /* Reporters */
   reporter: [
     ['list'],
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
-    ...(process.env.CI ? [['github'] as const] : []),
+    ...(isCI ? [['github'] as const] : []),
   ],
   /* Shared settings for all projects */
   use: {
     baseURL: process.env.BASE_URL || 'https://demo.populon.app',
+    headless: isHeadless,
+    launchOptions: {
+      slowMo: slowMoMs,
+    },
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    viewport: { width: 1280, height: 720 },
+    viewport: { width: 1366, height: 768 },
     ignoreHTTPSErrors: true,
   },
 
@@ -40,7 +48,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1366, height: 768 } },
     },
   ],
 });

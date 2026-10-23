@@ -1,4 +1,4 @@
-import { test, expect } from '../src/fixtures/testFixtures';
+import { test, expect, demoStep } from '../src/fixtures/testFixtures';
 
 const GROUP_NAME = process.env.TEST_GROUP_NAME || 'uu_2026_BQAS_team_1';
 
@@ -16,21 +16,21 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     const password = process.env.TEST_USER_PASSWORD;
     test.skip(!email || !password, 'Skipping TC-001: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
-    await test.step('Předpoklady: Přihlášení do Populonu a přepnutí rozhraní do EN', async () => {
+    await demoStep(page, 'Předpoklady: Přihlášení do Populonu a přepnutí rozhraní do EN', async () => {
       await loginPage.goto();
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
       await dashboardPage.expectDashboardLoaded();
     });
 
-    await test.step('Krok 1–6: Otevření stránky skupiny uu_2026_BQAS_team_1 a přechod na záložku Notifications', async () => {
+    await demoStep(page, 'Krok 1–6: Otevření stránky skupiny uu_2026_BQAS_team_1 a přechod na záložku Notifications', async () => {
       await societyPage.openGroupFromNavbar(GROUP_NAME);
       await societyPage.expectSocietyLoaded(GROUP_NAME);
       await societyPage.openNotificationsTab();
       await expect(societyPage.getNotificationLinkByTitle('První testovací notifikace')).toBeVisible();
     });
 
-    await test.step('Krok 7: Otevření notifikace "První testovací notifikace" a ověření detailu (Title, Description, Text)', async () => {
+    await demoStep(page, 'Krok 7: Otevření notifikace "První testovací notifikace" a ověření detailu (Title, Description, Text)', async () => {
       await societyPage.openNotificationByTitle('První testovací notifikace');
       await notificationDetailPage.expectNotificationDetails({
         title: 'První testovací notifikace',
@@ -55,7 +55,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
 
     let directNotificationUrl = '/notificationcard?notificationId=7447';
 
-    await test.step('Krok 1: Přihlášení jako aktivní člen skupiny a ověření dostupnosti interní notifikace', async () => {
+    await demoStep(page, 'Krok 1: Přihlášení jako aktivní člen skupiny a ověření dostupnosti interní notifikace', async () => {
       await loginPage.goto();
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
@@ -70,7 +70,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       directNotificationUrl = page.url();
     });
 
-    await test.step('Krok 2: Odhlášení a kontrola záložky Notifications jako neoprávněný (anonymní) návštěvník', async () => {
+    await demoStep(page, 'Krok 2: Odhlášení a kontrola záložky Notifications jako neoprávněný (anonymní) návštěvník', async () => {
       await dashboardPage.logout();
       await societyPage.gotoSociety();
       await societyPage.openNotificationsTab();
@@ -80,7 +80,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       await expect(societyPage.tabPanelContent).toContainText(/No new notifications|Ei uusia tiedotteita/i);
     });
 
-    await test.step('Krok 3: Pokus o přímý přístup k detailu notifikace přes zkopírovanou URL neoprávněným uživatelem', async () => {
+    await demoStep(page, 'Krok 3: Pokus o přímý přístup k detailu notifikace přes zkopírovanou URL neoprávněným uživatelem', async () => {
       await page.goto(directNotificationUrl);
       await notificationDetailPage.waitForPageLoad();
       await notificationDetailPage.expectAccessDenied(
@@ -101,14 +101,14 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     const password = process.env.TEST_USER_PASSWORD;
     test.skip(!email || !password, 'Skipping TC-003: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
-    await test.step('Předpoklady: Přihlášení jako člen skupiny uu_2026_BQAS_team_1', async () => {
+    await demoStep(page, 'Předpoklady: Přihlášení jako člen skupiny uu_2026_BQAS_team_1', async () => {
       await loginPage.goto();
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
       await dashboardPage.expectDashboardLoaded();
     });
 
-    await test.step('Krok 1–6: Ověření, že notifikace s budoucím Release date není před časem vydání členovi dostupná v přehledu ani přes URL', async () => {
+    await demoStep(page, 'Krok 1–6: Ověření, že notifikace s budoucím Release date není před časem vydání členovi dostupná v přehledu ani přes URL', async () => {
       await societyPage.gotoSociety();
       await societyPage.openNotificationsTab();
 
@@ -120,7 +120,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       await notificationDetailPage.expectAccessDenied('Druhá testovací notifikace - budoucí vydání');
     });
 
-    await test.step('Krok 7–8: Ověření, že po uplynutí Release date je notifikace dostupná v přehledu skupiny, na dashboardu i v detailu', async () => {
+    await demoStep(page, 'Krok 7–8: Ověření, že po uplynutí Release date je notifikace dostupná v přehledu skupiny, na dashboardu i v detailu', async () => {
       // Ověření na osobním dashboardu člena (Home -> Notifications)
       await page.goto('/usercard');
       await page.locator('[robot-test="userCardTabbedPanel:tab3"]').click();
@@ -151,7 +151,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
 
     let memberCardUrl = '/membercard?memberId=24096';
 
-    await test.step('Krok 1: Přihlášení člena a otevření skupiny uu_2026_BQAS_team_1 přes My groups', async () => {
+    await demoStep(page, 'Krok 1: Přihlášení člena a otevření skupiny uu_2026_BQAS_team_1 přes My groups', async () => {
       await loginPage.goto();
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
@@ -160,12 +160,12 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       await societyPage.expectSocietyLoaded(GROUP_NAME);
     });
 
-    await test.step('Krok 2: Ověření prevence duplicitního členství (zobrazen odkaz Member information místo přihlášky)', async () => {
+    await demoStep(page, 'Krok 2: Ověření prevence duplicitního členství (zobrazen odkaz Member information místo přihlášky)', async () => {
       await expect(societyPage.memberInformationButton).toBeVisible();
       await expect(page.locator('a:has-text("Join group"), a:has-text("Apply for membership")')).toHaveCount(0);
     });
 
-    await test.step('Krok 3: Otevření členské karty (Member information) přihlášeného člena', async () => {
+    await demoStep(page, 'Krok 3: Otevření členské karty (Member information) přihlášeného člena', async () => {
       await societyPage.openMemberInformation();
       await memberCardPage.expectMemberCardLoaded();
       await expect(memberCardPage.emailLink).toContainText('@');
@@ -173,7 +173,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       memberCardUrl = page.url();
     });
 
-    await test.step('Krok 4: Úprava členských údajů (Street address, Zip code, City, souhlas se zobrazením) a uložení', async () => {
+    await demoStep(page, 'Krok 4: Úprava členských údajů (Street address, Zip code, City, souhlas se zobrazením) a uložení', async () => {
       await memberCardPage.openEditForm();
       await memberCardPage.updateAddressDetails({
         streetAddress: 'Parukářka 4',
@@ -183,7 +183,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       });
     });
 
-    await test.step('Krok 5: Ověření hlášky "Data saved!", kontrola perzistence uložených hodnot a uvedení do výchozího stavu', async () => {
+    await demoStep(page, 'Krok 5: Ověření hlášky "Data saved!", kontrola perzistence uložených hodnot a uvedení do výchozího stavu', async () => {
       await memberCardPage.expectSaveSuccessAlert();
       await memberCardPage.openEditForm();
       await expect(memberCardPage.streetAddressInput).toHaveValue('Parukářka 4');
@@ -200,7 +200,7 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
       await memberCardPage.expectSaveSuccessAlert();
     });
 
-    await test.step('Krok 6–7: Odhlášení a ověření, že přímá URL členské karty je chráněna před nepřihlášeným uživatelem (GDPR/RBAC)', async () => {
+    await demoStep(page, 'Krok 6–7: Odhlášení a ověření, že přímá URL členské karty je chráněna před nepřihlášeným uživatelem (GDPR/RBAC)', async () => {
       await dashboardPage.logout();
       await page.goto(memberCardUrl);
       await memberCardPage.waitForPageLoad();

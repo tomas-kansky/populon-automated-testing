@@ -5,6 +5,7 @@ import { SearchPage } from '../pages/SearchPage';
 import { SocietyPage } from '../pages/SocietyPage';
 import { NotificationDetailPage } from '../pages/NotificationDetailPage';
 import { MemberCardPage } from '../pages/MemberCardPage';
+import { installDemoOverlay } from '../utils/demoOverlay';
 
 type AppFixtures = {
   loginPage: LoginPage;
@@ -16,6 +17,10 @@ type AppFixtures = {
 };
 
 export const test = base.extend<AppFixtures>({
+  page: async ({ page }, use, testInfo) => {
+    await installDemoOverlay(page, testInfo.title);
+    await use(page);
+  },
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);
@@ -43,3 +48,4 @@ export const test = base.extend<AppFixtures>({
 });
 
 export { expect } from '@playwright/test';
+export { demoStep } from '../utils/demoOverlay';
