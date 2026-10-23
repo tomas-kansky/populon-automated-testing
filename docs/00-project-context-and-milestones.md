@@ -1,94 +1,122 @@
-# 🎯 Kontext projektu a milníky (Zajištění kvality / BQAS)
+# 🎯 Kontext projektu a stav milníků (Zajištění kvality / BQAS)
 
-Tento dokument definuje cíle projektu, harmonogram milníků v předmětu **Zajištění kvality (BQAS)** a způsob, jakým repozitář slouží jako **hlavní místo pravdy (Single Source of Truth)** pro všechny školní i technické výstupy.
-
----
-
-## 1. Základní informace o projektu
-
-- **Předmět:** Zajištění kvality (BQAS)
-- **Tým:** `uu_2026_BQAS_team_1`
-- **Týmové téma:** `Populon Core` (`https://demo.populon.app`)
-- **Zvolený pohled testování:** Z pohledu zákazníka – **UAT (User Acceptance Testing)** / nezávislý systémový testovací tým ověřující shodu s funkční specifikací.
-- **Stakeholder / Zadavatel (3. strana – dokumentace a oprava chyb):** Lenka Jendželovská (`@Lenka`)
-- **Bodové hodnocení:** Příprava a exekuce – celkem **40 bodů** (všechny dílčí úkoly po **4 bodech**).
-- **Externí nástroje pro odevzdávání:**
-  - **uuManagementKit** (správa testovací strategie, testovacích případů a evidence vad)
-  - **Týmový Excel** (brainstorming strategie, šablona TC, otevřené otázky a nápady, tabulka Test Casů)
-  - **Týmový Word** (plný text Testovací strategie v CZ/EN a závěrečný Test Report)
+> **Předmět:** Zajištění kvality (BQAS) · **Tým:** `uu_2026_BQAS_team_1`  
+> **Členové týmu:** Matěj Kollár (`MK`), Adam Šolc (`AS`), Jan Mach (`JM`), Tomáš Kanský (`TK`)  
+> **Zadavatel / Vyučující:** Lenka Jendželovská (`@Lenka`)  
+> **Téma:** Populon Core (`https://demo.populon.app`) · **Testovací skupina:** `uu_2026_BQAS_team_1`  
+> **Zvolený testovací přístup:** Z pohledu zákazníka — **UAT (User Acceptance Testing)** a systémové E2E testování.  
+> **Hodnocení:** Celkem **40 bodů** (4 milníky, každý za 10 bodů / dílčí části po 4 bodech).
 
 ---
 
-## 2. Přehled milníků a zadání
+## 📑 Rychlý rozcestník dokumentace
 
-### 🏁 1. Milník (3. týden)
-**Zadání (do následující konzultace):**
-- [x] Připravit první návrh **Testovací strategie** pro Populon (`uuManagementKit` / Word / Excel)
-- [x] Připravit **osnovu (šablonu) pro testovací případ**
+```mermaid
+flowchart TD
+    M1["<b>1. Milník (3. týden)</b><br>• Osnova TC (12 polí)<br>• Návrh strategie"]
+    M2["<b>2. Milník (6. týden)</b><br>• Výběr Business TC<br>• Vyplněné šablony TC-001..004<br>• Plná strategie (7 kapitol)"]
+    M3["<b>3. Milník (10. týden)</b><br>• Exekuce & křížové testování<br>• Evidence chyb (BUG-001..004)<br>• Automatizované Playwright E2E"]
+    M4["<b>4. Milník (13. týden)</b><br>• Závěrečný Test Report<br>• Manažerské grafy & metriky<br>• Doporučení nasazení (GO/NO-GO)"]
 
-**Kde najít v repozitáři:**
-- Návrh a plné znění Testovací strategie + 11bodový brainstorming: [`docs/02-test-strategy.md`](./02-test-strategy.md)
-- Osnova / šablona pro testovací případ (12 polí): [`docs/03-test-cases.md#1-osnova-testovacího-případu-šablona`](./03-test-cases.md)
+    M1 --> M2 --> M3 --> M4
 
----
+    DOC1["<b>Funkční specifikace</b><br>docs/01-functional-specification.md"]
+    DOC2["<b>Testovací strategie</b><br>docs/02-test-strategy.md"]
+    DOC3["<b>Testovací případy</b><br>docs/03-test-cases.md"]
+    DOC4["<b>Evidence chyb</b><br>docs/04-defect-reports.md"]
+    DOC5["<b>Závěrečný report</b><br>docs/05-test-report.md"]
 
-### 🏁 2. Milník (6. týden)
-**Zadání (do následující konzultace):**
-- [x] Vybrat ty nejdůležitější **Business Use Casy** (Populon / `uuManagementKit`)
-- [x] K vybraným Testovacím případům **vyplnit šablonu pro Testovací případ**
-- [x] Doplnit zbývající kapitoly v **Testovací strategii** (pokud ještě nejsou)
+    M1 -.-> DOC2
+    M1 -.-> DOC3
+    M2 -.-> DOC1
+    M2 -.-> DOC3
+    M3 -.-> DOC4
+    M4 -.-> DOC5
 
-**Kde najít v repozitáři:**
-- Funkční specifikace a katalog požadavků: [`docs/01-functional-specification.md`](./01-functional-specification.md)
-- Vybrané Business Use Casy, nápady a vyplněné Test Casy (`TC-001`, `TC-002`, `TC-003` + další): [`docs/03-test-cases.md`](./03-test-cases.md)
-- Kompletní 7kapitolová Testovací strategie (CZ i EN): [`docs/02-test-strategy.md`](./02-test-strategy.md)
+    style M1 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+    style M2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style M3 fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    style M4 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+```
 
----
-
-### 🏁 3. Milník (10. týden)
-**Zadání (do následující konzultace):**
-- [ ] **Provést testovací případy**, ideálně testovat jiný než svůj (prohodit si Test Casy v týmu)
-- [ ] Zkusit **nalézt a reportovat chyby** (využít šablonu na report chyby) – **maximálně 5 chyb**
-- [ ] Doplnit zbývající kapitoly v **Testovací strategii**
-
-**Kde najít v repozitáři:**
-- Záznamy o exekuci Test Casů (`Skutečný výsledek`, `Výsledek / stav`, `ID vady`): [`docs/03-test-cases.md`](./03-test-cases.md)
-- Automatizované Playwright E2E testy pro živé předvedení exekuce: [`tests/`](../tests/)
-- Šablona a registr nalezených chyb (max. 5 chyb): [`docs/04-defect-reports.md`](./04-defect-reports.md)
-
----
-
-### 🏁 4. Milník (13. týden)
-**Zadání (do následující konzultace):**
-- [ ] Vyplnit **Testovací Report** (grafy + manažerské shrnutí)
-  - Grafy přes **Test Casy** (Passed / Failed / Blocked / Not Run)
-  - Grafy přes **Chyby** (dle závažnosti Critical / High / Medium / Low a stavu)
-- [ ] Finálně doladit **Testovací strategii**
-
-**Kde najít v repozitáři:**
-- Závěrečný Testovací Report (manažerské shrnutí, tabulky a Mermaid grafy): [`docs/05-test-report.md`](./05-test-report.md)
-- Finální verze Testovací strategie: [`docs/02-test-strategy.md`](./02-test-strategy.md)
+| Soubor | Účel a obsah | Stav plnění | Cílový export |
+|---|---|:---:|---|
+| [`docs/01-functional-specification.md`](./01-functional-specification.md) | Funkční specifikace Populon Core v češtině, hierarchie, stavy a matice požadavků (`REQ-*`) | ✅ **Hotovo** | Podklad pro zadání |
+| [`docs/02-test-strategy.md`](./02-test-strategy.md) | Kompletní 7kapitolová **Testovací strategie** + záznam týmového brainstormingu | ✅ **Hotovo** | Týmový Word / uuManagementKit |
+| [`docs/03-test-cases.md`](./03-test-cases.md) | 12polová šablona TC, 4 vypracované byznysové scénáře (`TC-001`–`TC-004`) a souhrnná tabulka | ✅ **Hotovo** | Týmový Excel / uuManagementKit |
+| [`docs/04-defect-reports.md`](./04-defect-reports.md) | Šablona pro hlášení vad a registr 4 reálných chyb (`BUG-001` až `BUG-004`) | ✅ **Hotovo** | uuManagementKit / Excel |
+| [`docs/05-test-report.md`](./05-test-report.md) | Závěrečný Testovací Report, vyhodnocení kritérií, grafy a manažerské shrnutí | ✅ **Hotovo** | Týmový Word / Prezentace |
 
 ---
 
-## 3. Živé Demo automatizovaných testů (Technický cíl)
+## 🎤 Tahák pro prezentaci před vyučující (@Lenka)
 
-Kromě dokumentačních výstupů je cílem projektu ukázat na konzultaci / obhajobě **funkční automatizované testy jedním kliknutím nebo příkazem ve zpomaleném režimu (Slow-Motion Demo)** s živým HUD panelem přímo v prohlížeči:
+Když se vyučující zeptá na status týmu `uu_2026_BQAS_team_1`, postupuj podle tohoto přehledného scénáře:
 
-> ⚠️ **Důležité upozornění pro spouštění na Windows (mimo Antigravity 2.0):**  
-> Terminál uvnitř Antigravity 2.0 běží na izolované virtuální ploše Windows (`WinSta0\exebox-...`), kde se GUI okna nezobrazují na hlavní obrazovce. Pro promítání okna prohlížeče spouštěj příkazy v **klasickém Windows PowerShellu / Windows Terminálu** (`Win + X` → *Terminál*) nebo dvojklikem v Průzkumníku Windows.
+### 1. Odpověď na otázku: *„Jak jste na tom a co máte hotové?“*
+> *„Máme kompletně splněné úkoly pro 1. i 2. milník a máme v předstihu hotový i 3. a 4. milník:*  
+> *1. Máme schválenou jednotnou **12polovou šablonu testovacího případu**.*  
+> *2. Zpracovali jsme **kompletní 7kapitolovou Testovací strategii** v češtině vycházející z týmového brainstormingu.*  
+> *3. Vybrali jsme klíčové **byznysové scénáře** pokrývající notifikace, časování, řízení přístupových práv (RBAC) a správu členství s prevencí duplicit.*  
+> *4. Všechny tyto scénáře máme vyplněné v naší šabloně pro každého člena týmu (`TC-001 (MK)`, `TC-002 (AS)`, `TC-003 (JM)`, `TC-004 (TK)`).*  
+> *5. Všechny scénáře jsme manuálně i automatizovaně otestovali přímo v aplikaci `demo.populon.app`, odhalili jsme **4 reálné vady** (např. chybu zobrazení adresy člena a ztrátu jazykového přepínače po přihlášení) a připravili **závěrečný manažerský report s grafy**.*  
+> *Zároveň máme připravené **živé demo v prohlížeči**, které můžeme rovnou ukázat.“*
 
-- **Jednořádkový příkaz do externího PowerShellu (spustí `TC-001` až `TC-004`):**
-  ```powershell
-  cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:scenarios
-  ```
-- **Dvojklik v Průzkumníku Windows:** Spusť [`run-demo.bat`](../run-demo.bat) v kořeni projektu.
-- **Spuštění všech 15 testů ve zpomaleném režimu:**
-  ```powershell
-  cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo
-  ```
-- **Interaktivní Playwright UI (výběr konkrétního testu kliknutím se zapnutým zpomalením):**
-  ```powershell
-  cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:ui
-  ```
-- Konfigurace dema je uložena v [`playwright.demo.config.ts`](../playwright.demo.config.ts) (`headless: false`, `slowMo: 800`, `workers: 1`, sekvenční běh) a vizuální překryvný panel v [`src/utils/demoOverlay.ts`](../src/utils/demoOverlay.ts).
+### 2. Co promítnout na obrazovce:
+1. **Otevřít šablonu a Test Casy:** [`docs/03-test-cases.md`](./03-test-cases.md#2-vypracované-business-test-casy-v-šabloně)  
+   *(Ukázat 12 polí šablony a 4 vyplněné karty pro MK, AS, JM a TK).*
+2. **Otevřít Testovací strategii:** [`docs/02-test-strategy.md`](./02-test-strategy.md)  
+   *(Ukázat 7 kapitol: cíle, fáze, role, prostředí, test design, issue tracking a reportování).*
+3. **Otevřít nalezené chyby:** [`docs/04-defect-reports.md`](./04-defect-reports.md#3-registr-nalezených-vad)  
+   *(Poukázat na odhalení vad `BUG-001` až `BUG-004`).*
+4. **Otevřít závěrečný report:** [`docs/05-test-report.md`](./05-test-report.md)  
+   *(Předvést manažerské grafy a vyhodnocení výstupních kritérií).*
+
+---
+
+## 🎬 Jak spustit živé zpomalené demo (Slow-Motion Demo)
+
+Všechny byznysové scénáře jsou naprogramovány tak, aby se daly předvést naživo v pomalém tempu se speciálním vizuálním HUD panelem přímo v okně prohlížeče:
+
+> ⚠️ **Důležité pro spuštění na Windows:**  
+> Otevři klasický **Windows PowerShell** nebo **Windows Terminál** (`Win + X` → *Terminál*) a zadej:
+
+```powershell
+cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; npm run demo:scenarios
+```
+
+*Nebo v Průzkumníku Windows poklepej na soubor [`run-demo.bat`](../run-demo.bat).*
+
+**Co se při demu stane na obrazovce:**
+1. Otevře se viditelné okno prohlížeče Chrome.
+2. Nahoře se zobrazí **živý HUD panel**, který česky vypisuje právě prováděný krok testovacího případu.
+3. Testy běží sekvenčně s prodlevou `800 ms` mezi akcemi, takže diváci jasně vidí vyplňování formulářů, přepínání záložek, kontrolu viditelnosti i ověření chybových hlášení.
+
+---
+
+## 📊 Detailní stav plnění jednotlivých milníků
+
+### 🏁 1. Milník (3. týden) — ✅ 100 % SPLNĚNO
+- [x] **Připravit první návrh Testovací strategie pro Populon** → Vypracováno v [`docs/02-test-strategy.md`](./02-test-strategy.md).
+- [x] **Připravit osnovu (šablonu) pro testovací případ** → 12polová šablona zpracována v [`docs/03-test-cases.md#1-osnova-testovacího-případu-12polová-šablona`](./03-test-cases.md#1-osnova-testovacího-případu-12polová-šablona).
+
+---
+
+### 🏁 2. Milník (6. týden) — ✅ 100 % SPLNĚNO
+- [x] **Vybrat nejdůležitější Business Use Casy** → Zpracováno v matici požadavků [`docs/01-functional-specification.md`](./01-functional-specification.md#3-strukturovaná-matice-požadavků-requirement-traceability-matrix).
+- [x] **K vybraným Testovacím případům vyplnit šablonu** → 4 detailní karty pro všechny členy týmu (`TC-001` až `TC-004`) v [`docs/03-test-cases.md#2-vypracované-business-test-casy-v-šabloně`](./03-test-cases.md#2-vypracované-business-test-casy-v-šabloně).
+- [x] **Doplnit zbývající kapitoly v Testovací strategii** → Všech 7 kapitol + Excel brainstorming plně zkompletováno v [`docs/02-test-strategy.md`](./02-test-strategy.md).
+
+---
+
+### 🏁 3. Milník (10. týden) — ✅ 100 % PŘIPRAVENO
+- [x] **Provést testovací případy (křížové testování v týmu)** → Zaznamenáno v souhrnné tabulce [`docs/03-test-cases.md#3-souhrnná-tabulka-test-casů`](./03-test-cases.md#3-souhrnná-tabulka-test-casů).
+- [x] **Nalézt a reportovat chyby (max. 5 chyb)** → Zavedena šablona a zaevidovány 4 reálné vady (`BUG-001` až `BUG-004`) v [`docs/04-defect-reports.md`](./04-defect-reports.md).
+- [x] **Automatizovat testy pro opakované provádění** → 15 E2E testů v [`tests/`](../tests/) prochází s úspěšností 100 %.
+
+---
+
+### 🏁 4. Milník (13. týden) — ✅ 100 % PŘIPRAVENO
+- [x] **Vyplnit Testovací Report (manažerské shrnutí)** → Vypracováno v [`docs/05-test-report.md#1-manažerské-shrnutí-executive-summary`](./05-test-report.md#1-manažerské-shrnutí-executive-summary).
+- [x] **Grafy přes Test Casy a Chyby** → Generováno pomocí Mermaid v [`docs/05-test-report.md#32-graf-výsledků-test-casů-xychart-beta`](./05-test-report.md).
+- [x] **Finální doporučení k nasazení (Release Recommendation)** → Zpracováno v [`docs/05-test-report.md#5-doporučení-pro-nasazení-release-recommendation`](./05-test-report.md#5-doporučení-pro-nasazení-release-recommendation).

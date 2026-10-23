@@ -1,111 +1,118 @@
 # 📊 Závěrečný Testovací Report (Test Summary Report — 4. milník)
 
+> **Předmět:** Zajištění kvality (BQAS) · Tým: `uu_2026_BQAS_team_1`  
 > **Zadání 4. milníku (13. týden):**  
 > - *Vyplnit Testovací Report (grafy + manažerské shrnutí)*  
-> - *Grafy přes Test Casy a chyby*  
-> - *Doladit Testovací strategii*  
-> **Cílové místo pro přenos:** Týmový Word / Prezentace / `uuManagementKit`.
+> - *Grafy přes Test Casy (Passed / Failed / Blocked / Not Run)*  
+> - *Grafy přes Chyby (Critical / High / Medium / Low)*  
+> - *Doladit Testovací strategii a doporučení k nasazení (Release Recommendation)*  
+> **Cílové výstupy pro odevzdání:** Týmový Word / Prezentace / `uuManagementKit`.
+
+---
+
+## 📑 Obsah dokumentu
+
+1. [Manažerské shrnutí (Executive Summary)](#1-manažerské-shrnutí-executive-summary)
+2. [Vyhodnocení vstupních a výstupních kritérií (Exit Criteria)](#2-vyhodnocení-výstupních-kritérií)
+3. [Metriky a grafy přes Testovací případy](#3-metriky-a-grafy-přes-testovací-případy)
+4. [Metriky a grafy přes Nalezené vady](#4-metriky-a-grafy-přes-nalezené-vady)
+5. [Doporučení pro nasazení do produkce (Release Recommendation)](#5-doporučení-pro-nasazení-release-recommendation)
 
 ---
 
 ## 1. Manažerské shrnutí (Executive Summary)
 
-- **Testovaný systém:** Populon Core (`https://demo.populon.app`) – testovací organizace `uu_2026_BQAS_team_1`
-- **Testovací tým:** `uu_2026_BQAS_team_1` (`MK`, `AS`, `JM`, `TK`)
-- **Typ a přístup testování:** Zákaznické akceptační a systémové testování (**UAT / E2E**) kombinující manuální křížovou exekuci Business Test Casů a automatizovanou regresní a kouřovou E2E sadu v nástroji **Playwright (TypeScript)**.
-- **Hodnocené oblasti (In Scope):**
-  1. *Societies & Membership* (životní cyklus členství, hierarchie spolků, reaktivace, izolace oprávnění)
-  2. *Custom Member Data Fields* (vlastní pole, povolené hodnoty, zpětná kompatibilita, viditelnost)
-  3. *Activities* (tvorba událostí, kapacita, viditelnost, stavy účastníků, rušení aktivit)
-  4. *Notifications* (publikace oznámení, časování `Release date`, úrovně viditelnosti)
-- **Shrnutí výsledků:**
-  - *(Doplnit finální komentář po uzavření 3. milníku: celkový počet provedených manuálních i automatizovaných testů, počet odhalených vad a celkové zhodnocení připravenosti systému).*
-- **Doporučení pro nasazení (Release Recommendation):**
-  - `[ GO / CONDITIONAL GO / NO-GO ]` – *(Doplnit dle stavu kritických a vysokých vad na konci 3. milníku).*
+Tento závěrečný testovací report shrnuje výsledky testování platformy **Populon Core** (`https://demo.populon.app`) provedeného nezávislým akceptačním týmem `uu_2026_BQAS_team_1` v rámci předmětu Zajištění kvality.
+
+- **Testovaný rozsah (In Scope):** Moduly *Societies & Membership*, *Custom Member Data Fields*, *Activities* a *Notifications*.
+- **Aplikovaný testovací přístup:** Z pohledu zákazníka — **UAT (User Acceptance Testing)** a systémové E2E testování. Kombinace křížového manuálního ověřování mezi členy týmu a robustní automatizované testovací sady v nástroji **Playwright (TypeScript)**.
+- **Klíčové zjištění kvality:**
+  - Jádro systému z hlediska **bezpečnosti, řízení přístupových práv (RBAC) a viditelnosti neveřejného obsahu** funguje spolehlivě: neveřejné notifikace ani citlivé karty členů nejsou přístupné neoprávněným uživatelům ani při přímém zadání URL.
+  - Vytváření a časování notifikací (`Release date`) funguje přesně dle funkční specifikace.
+  - Během testování byly odhaleny celkem **4 vady** (1 střední závažnosti v lokalizaci a 3 nízké závažnosti v UI/zobrazení). V systému nebyla nalezena **žádná kritická (Critical) ani vysoká (High) vada**.
 
 ---
 
-## 2. Vyhodnocení vstupních a výstupních kritérií (Exit Criteria Check)
+## 2. Vyhodnocení výstupních kritérií
 
-| Kritérium dle Testovací strategie | Cílový stav | Skutečný stav | Splněno? |
-|---|---|---|---|
-| Dostupnost specifikace a zodpovězení otázek | 100 % | Specifikace revidována, dotazy zodpovězeny | ✅ Ano |
-| Dostupnost testovacího prostředí a skupiny `uu_2026_BQAS_team_1` | Dostupná | `https://demo.populon.app` plně dostupné | ✅ Ano |
-| Exekuce všech kritických (`Critical`) a vysokých (`High`) Test Casů | 100 % spuštěno | *(Doplnit po 3. milníku)* | ⏳ V procesu |
-| Řádná evidence nalezených chyb (max. 5 chyb dle zadání) | Zaevidováno vč. závažnosti | *(Doplnit po 3. milníku)* | ⏳ V procesu |
-| Automatizované E2E regresní a smoke testy (`Playwright`) | 100 % PASS | 11 / 11 automatizovaných E2E testů PASS | ✅ Ano |
+Porovnání reálného stavu s kritérii definovanými v [Testovací strategii](./02-test-strategy.md#2-fáze-testování-vstupní-a-výstupní-kritéria):
 
----
-
-## 3. Metriky a grafy přes Testovací případy (Test Cases Metrics)
-
-### 3.1 Souhrnná tabulka exekuce Test Casů
-
-#### A) Manuální / Týmové Business Test Casy (`docs/03-test-cases.md` & `tests/scenarios.spec.ts`)
-
-| Stav testu | Počet TC | Podíl (%) | Poznámka |
-|---|---|---|---|
-| **PASS (Prošlo)** | 4 | 100 % | `TC-001 (MK)`, `TC-002 (AS)`, `TC-003 (JM)`, `TC-004 (TK)` |
-| **FAIL (Neprošlo)** | 0 | 0.0 % | *(u `TC-004` zaevidována kosmetická vada zobrazení adresy `BUG-001`)* |
-| **BLOCKED (Blokováno)** | 0 | 0.0 % | — |
-| **NOT RUN (Nespuštěno)** | 0 | 0.0 % | — |
-| **Celkem týmových TC** | **4** | **100 %** | Všechny 4 scénáře plně automatizovány v Playwrightu |
-
-#### B) Automatizované Playwright E2E testy (`tests/*.spec.ts`)
-
-| Testovací sada (Suite) | Počet testů | PASS | FAIL | Pokrytá oblast |
-|---|---|---|---|---|
-| `tests/scenarios.spec.ts` | 4 | 4 | 0 | Byznysové scénáře `TC-001` až `TC-004` (Notifications, Visibility, Timing, Member Information & RBAC) |
-| `tests/auth.spec.ts` | 6 | 6 | 0 | Přihlášení, validace formuláře, obnova hesla, odhlášení |
-| `tests/search.spec.ts` | 3 | 3 | 0 | Vyhledávání spolků a komunit (`/search`) |
-| `tests/dashboard.spec.ts` | 2 | 2 | 0 | Přístup do autentizované zóny a přepínání jazyků (FI/EN) |
-| **Celkem E2E automatizace** | **15** | **15** | **0** | **100 % úspěšnost (Business UAT + Smoke & Regression)** |
+| Kritérium dle Testovací strategie | Cílový požadavek | Skutečný stav | Splněno? |
+|---|---|---|:---:|
+| **Dostupnost funkční specifikace a vyjasnění dotazů** | 100 % specifikace revidováno, dotazy zodpovězeny | Specifikace `@Lenka` plně zpracována, katalog `REQ-*` vytvořen | ✅ **Splněno** |
+| **Dostupnost testovacího prostředí** | Funkční instance Populon | Prostředí `demo.populon.app` a skupina `uu_2026_BQAS_team_1` plně dostupné | ✅ **Splněno** |
+| **Exekuce kritických a vysokých Test Casů** | 100 % provedeno | Všechny 4 byznysové scénáře (`TC-001` až `TC-004`) otestovány a automatizovány | ✅ **Splněno** |
+| **Žádná otevřená kritická (Critical) vada** | 0 vad se závažností Critical | **0 otevřených kritických vad** | ✅ **Splněno** |
+| **Stabilita automatizované regresní sady** | 100 % úspěšnost (PASS) | Všech **15 automatizovaných testů** v Playwrightu prochází (PASS) | ✅ **Splněno** |
+| **Řádná evidence a klasifikace vad** | Zaevidováno max. 5 vad | Zaevidovány 4 reálné vady s kompletními kroky reprodukce | ✅ **Splněno** |
 
 ---
 
-### 3.2 Grafy přes Test Casy (pro přenos do Wordu / Prezentace)
+## 3. Metriky a grafy přes Testovací případy
+
+### 3.1 Souhrn výsledků exekuce testů
+
+| Testovací sada | Počet testů | PASS (Prošlo) | FAIL (Neprošlo) | BLOCKED | NOT RUN | Úspěšnost |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Týmové Business Test Casy (`TC-001`–`TC-004`)** | 4 | 4 | 0 | 0 | 0 | **100 %** |
+| **Autentizace a uživatelské účty (`auth.spec.ts`)** | 6 | 6 | 0 | 0 | 0 | **100 %** |
+| **Vyhledávání skupin a komunit (`search.spec.ts`)** | 3 | 3 | 0 | 0 | 0 | **100 %** |
+| **Nástěnka a přepínání jazyků (`dashboard.spec.ts`)** | 2 | 2 | 0 | 0 | 0 | **100 %** |
+| **Celkem v projektu** | **15** | **15** | **0** | **0** | **0** | **100 %** |
+
+### 3.2 Graf výsledků Test Casů (xychart-beta)
 
 ```mermaid
 xychart-beta
-    title "Stav exekuce Test Casů (Celkem 15 E2E & UAT scénářů)"
-    x-axis ["PASS", "FAIL", "BLOCKED", "NOT RUN"]
+    title "Výsledky exekuce Test Casů (Celkem 15 scénářů)"
+    x-axis ["PASS (Prošlo)", "FAIL (Neprošlo)", "BLOCKED", "NOT RUN"]
     y-axis "Počet testů" 0 --> 16
     bar [15, 0, 0, 0]
 ```
 
 ---
 
-## 4. Metriky a grafy přes Nalezené chyby (Defects Metrics)
+## 4. Metriky a grafy přes Nalezené vady
 
-> *(Čísla v tabulce a grafu aktualizujte po dokončení křížového testování a nahlášení max. 5 chyb ve 3. milníku v [`docs/04-defect-reports.md`](./04-defect-reports.md)).*
+### 4.1 Rozdělení vad podle závažnosti (Severity)
 
-### 4.1 Rozdělení chyb podle závažnosti (Severity) a stavu
+| Závažnost (Severity) | Počet vad | Podíl (%) | Stav | Evidovaná ID vad |
+|---|:---:|:---:|:---:|---|
+| 🔴 **Kritická (Critical / Blocker)** | **0** | 0 % | — | Žádná vada |
+| 🟠 **Vysoká (High / Major)** | **0** | 0 % | — | Žádná vada |
+| 🟡 **Střední (Medium / Moderate)** | **1** | 25 % | `Nová (New)` | `BUG-002` (ztráta jazykového přepínače po přihlášení) |
+| 🟢 **Nízká (Low / Cosmetic)** | **3** | 75 % | `Nová (New)` | `BUG-001` (zobrazení adresy), `BUG-003` (SQ překlad), `BUG-004` (duplicitní alert) |
+| **Celkem zaevidováno** | **4** | **100 %** | — | *(Limit zadání 3. milníku: max. 5 vad)* |
 
-| Závažnost (Severity) | Počet chyb | Otevřené (`New` / `Assigned`) | Opravené / Uzavřené (`Fixed` / `Closed`) | ID vad |
-|---|---|---|---|---|
-| 🔴 **Critical** | 0 | 0 | 0 | — |
-| 🟠 **High** | 0 | 0 | 0 | — |
-| 🟡 **Medium** | 1 | 1 | 0 | `BUG-002` (ztráta jazyka & chybějící přepínač) |
-| 🟢 **Low** | 3 | 3 | 0 | `BUG-001` (adresa), `BUG-003` (SQ překlad), `BUG-004` (duplicitní alert) |
-| **Celkem (max. 5)** | **4** | **4** | **0** | `BUG-001` až `BUG-004` |
-
-### 4.2 Rozdělení chyb podle funkčních modulů
-
-| Modul Populon Core | Počet nalezených chyb | Závažnosti |
-|---|---|---|
-| **Societies & Membership** | 1 | `Low` (`BUG-001` adresa člena) |
-| **Custom Member Data Fields** | 0 | — |
-| **Activities** | 0 | — |
-| **Notifications** | 0 | — |
-| **Localization & Navigation** | 2 | `Medium` (`BUG-002`), `Low` (`BUG-003`) |
-| **Authentication & UI** | 1 | `Low` (`BUG-004` duplicitní alert) |
-
-### 4.3 Graf přes chyby dle závažnosti
+### 4.2 Graf rozdělení vad dle závažnosti (xychart-beta)
 
 ```mermaid
 xychart-beta
-    title "Počet nalezených chyb podle závažnosti (Severity)"
-    x-axis ["Critical", "High", "Medium", "Low"]
-    y-axis "Počet chyb" 0 --> 5
+    title "Počet nalezených vad podle závažnosti"
+    x-axis ["Critical (Kritická)", "High (Vysoká)", "Medium (Střední)", "Low (Nízká)"]
+    y-axis "Počet vad" 0 --> 4
     bar [0, 0, 1, 3]
 ```
+
+### 4.3 Rozdělení vad podle funkčních modulů
+
+| Modul Populon Core | Počet vad | Nejvyšší závažnost | Dotčené vady |
+|---|:---:|:---:|---|
+| **Lokalizace a navigace** | 2 | 🟡 Střední | `BUG-002` (jazyk po přihlášení), `BUG-003` (SQ formulář) |
+| **Členství a správa údajů** | 1 | 🟢 Nízká | `BUG-001` (nevykreslení adresy na přehledu) |
+| **Autentizace a systémové alerty** | 1 | 🟢 Nízká | `BUG-004` (zdvojená hláška v `#globalFeedback`) |
+| **Aktivity a události** | 0 | — | Žádná vada neodhalena |
+| **Notifikace a oznámení** | 0 | — | Žádná vada neodhalena |
+
+---
+
+## 5. Doporučení pro nasazení (Release Recommendation)
+
+> [!IMPORTANT]
+> **Finální doporučení testovacího týmu: PODMÍNĚNÉ SCHVÁLENÍ (CONDITIONAL GO)**
+
+### Odůvodnění:
+1. **Bezpečnost a kritické procesy:** Všechna bezpečnostní pravidla (izolace přístupu, viditelnost neveřejných dat, prevence duplicitních přihlášek) jsou plně funkční a nebyla nalezena žádná kritická ani blokující vada.
+2. **Podmínky pro ostré nasazení:**
+   - Před ostrým produkčním spuštěním doporučujeme opravit vadu **`BUG-002`** (doplnit možnost volby jazyka pro přihlášené uživatele v nastavení profilu).
+   - Vady **`BUG-001`**, **`BUG-003`** a **`BUG-004`** mají nízký dopad a mohou být zahrnuty do následujícího údržbového releasu.

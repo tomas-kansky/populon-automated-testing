@@ -1,155 +1,191 @@
-# 🧪 Testovací případy (Test Cases) a Osnova TC
+# 🧪 Testovací případy (Test Cases) a Šablona TC
 
-> **Cílové artefakty pro přenos:** Týmový Excel (listy `BQAS | Osnova testovacího případu`, `BQAS | Otevřené otázky a nápady`, list `Test Cases`) a `uuManagementKit`.  
-> **Testovací skupina v Populonu:** `uu_2026_BQAS_team_1`
-
----
-
-## 1. Osnova testovacího případu (Šablona z 1. milníku)
-
-> *„Pouze návrh polí šablony • konkrétní testovací případ se v 1. milníku nevyplňuje • Jak budeme zapisovat jednotlivé testy?“*
-
-| Pole | K čemu slouží | Poznámka pro budoucí vyplnění |
-|---|---|---|
-| **TC-ID** | Jedinečný identifikátor testovacího případu | např. `TC-001` (v týmu doplněno o iniciály autora, např. `TC-001 (MK)`) |
-| **Název** | Krátký název toho, co se bude ověřovat | Stručný a výstižný popis scénáře |
-| **Požadavek / reference** | Vazba na konkrétní požadavek specifikace | Sekce a bod dokumentu / cesta v aplikaci (např. `Populon → Administration → Notifications` / `REQ-NOT-01`) |
-| **Cíl testu** | Co chceme prokázat | Jednověté shrnutí účelu testu |
-| **Priorita** | Důležitost testu | `Nízká` / `Střední` / `Vysoká` |
-| **Předpoklady** | Výchozí stav a oprávnění | Volit efektivní začátek (nezačínat vždy od přihlášení: *„Správce je přihlášen do Populonu a spravuje skupinu...“*) |
-| **Testovací data** | Účty, role, hodnoty | Konkrétní vstupy (název skupiny, texty polí, časy, nastavení viditelnosti) |
-| **Kroky** | Postup testera | Číslované kroky (`1.`, `2.`, ...) |
-| **Očekávaný výsledek** | Správné chování systému | Podle požadavku; číslované body odpovídající krokům (`1 krok = 1 či více očekávaných výsledků`) |
-| **Skutečný výsledek** | Pozorované chování při provedení | Vyplnit až při testování (3. milník) |
-| **Výsledek / stav** | Zda test prošel, neprošel nebo nebyl spuštěn | `PASS` / `FAIL` / `NOT RUN` / `BLOCKED` |
-| **ID vady / poznámka** | Odkaz na zjištěný problém | Vyplnit až při testování (např. `BUG-001`) |
+> **Předmět:** Zajištění kvality (BQAS) · Tým: `uu_2026_BQAS_team_1`  
+> **Cílové výstupy pro odevzdání:** Týmový Excel (listy `BQAS | Osnova testovacího případu`, `BQAS | Otevřené otázky a nápady`, list `Test Cases`) a `uuManagementKit`.  
+> **Testovací skupina v Populonu:** `uu_2026_BQAS_team_1` (`https://demo.populon.app/societycard?societyId=4516`)
 
 ---
 
-## 2. Vypracované Testovací případy v šabloně (2. milník)
+## 📑 Obsah dokumentu
 
-Níže jsou vybrané nejdůležitější **Business Test Casy** týmu `uu_2026_BQAS_team_1`. Každý testovací případ je detailně vyplněn v naší **12polové šabloně** a odpovídá jednomu členovi týmu:
-- **`TC-001 (MK)`** — Matěj Kollár (Modul: *Notifications*)
-- **`TC-002 (AS)`** — Adam Šolc (Modul: *Notifications & RBAC*)
-- **`TC-003 (JM)`** — Jan Mach (Modul: *Notifications & Release timing*)
-- **`TC-004 (TK)`** — Tomáš Kanský (Moduly: *Societies & Membership* + *Member Data Fields*)
+1. [Osnova testovacího případu (12polová šablona z 1. milníku)](#1-osnova-testovacího-případu-12polová-šablona)
+2. [Detailně vypracované Business Test Casy v šabloně (2. milník)](#2-vypracované-business-test-casy-v-šabloně)
+   - [TC-001 (MK): Vytvoření a zobrazení notifikace ve skupině](#-šablona-pro-tc-001-mk-vytvoření-a-zobrazení-notifikace-ve-skupině)
+   - [TC-002 (AS): Viditelnost notifikace pouze pro členy skupiny](#-šablona-pro-tc-002-as-viditelnost-notifikace-pouze-pro-členy-skupiny)
+   - [TC-003 (JM): Časování zveřejnění notifikace (Release date)](#-šablona-pro-tc-003-jm-časování-zveřejnění-notifikace-release-date)
+   - [TC-004 (TK): Správa údajů člena, prevence duplicity a ochrana soukromí](#-šablona-pro-tc-004-tk-správa-údajů-člena-prevence-duplicity-a-ochrana-soukromí)
+3. [Souhrnná tabulka pro export do Excelu a uuManagementKitu](#3-souhrnná-tabulka-test-casů)
+4. [Záznam diskusního listu z Excelu (Otevřené otázky a nápady)](#4-záznam-diskusního-listu-z-excelu-nápady-a-otázky)
+5. [Přehled automatizace v Playwrightu (100% pokrytí scénářů)](#5-přehled-automatizace-v-playwrightu)
+
+---
+
+## 1. Osnova testovacího případu (12polová šablona)
+
+Tato šablona byla schválena v rámci **1. milníku** a slouží jako závazný standard pro zápis všech testovacích scénářů našeho týmu:
+
+| # | Pole šablony | Význam a účel pole | Instrukce pro vyplnění |
+|:---:|---|---|---|
+| **1** | **TC-ID** | Jedinečný kód testovacího případu | Např. `TC-001` doplněný o iniciály autora, např. `TC-001 (MK)` |
+| **2** | **Název** | Výstižný název testovaného scénáře | Stručný popis v češtině vystihující podstatu testu |
+| **3** | **Požadavek / reference** | Přímá vazba na funkční specifikaci | Kód požadavku z matice ([`REQ-*`](./01-functional-specification.md#3-strukturovaná-matice-požadavků-requirement-traceability-matrix)) a cesta v UI |
+| **4** | **Cíl testu** | Co přesně má test prokázat | Jednoznačná deklarace očekávaného chování systému |
+| **5** | **Priorita** | Důležitost scénáře | `Vysoká` / `Střední` / `Nízká` |
+| **6** | **Předpoklady** | Výchozí stav aplikace a uživatele | Efektivní popis výchozího stavu bez nutnosti opakovat triviální přihlášení |
+| **7** | **Testovací data** | Konkrétní hodnoty a parametry | Přesné texty, časy, názvy entit, testovací účty |
+| **8** | **Kroky** | Číslovaný postup testera | Jednoznačné kroky (`1.`, `2.`, `3.`, ...) |
+| **9** | **Očekávaný výsledek** | Správné chování podle specifikace | Číslované body navázané na jednotlivé kroky |
+| **10** | **Skutečný výsledek** | Pozorované chování při exekuci | Vyplňuje se při provádění testu (3. milník) |
+| **11** | **Výsledek / stav** | Finální stav exekuce | `PASS` (prošlo) / `FAIL` (neprošlo) / `BLOCKED` / `NOT RUN` |
+| **12** | **ID vady / poznámka** | Odkaz na hlášení zjištěného problému | Odkaz do [Registru vad](./04-defect-reports.md) (např. `BUG-001`) nebo poznámka k automatizaci |
+
+---
+
+## 2. Vypracované Business Test Casy v šabloně
+
+V rámci **2. milníku** jsme vybrali 4 nejdůležitější byznysové scénáře pokrývající klíčové moduly Populonu. Každý člen týmu garantuje jeden scénář:
+
+```mermaid
+flowchart TD
+    subgraph TC_COVERAGE["Pokrytí klíčových byznys use casů"]
+        TC1["<b>TC-001 (MK)</b><br>Autor: Matěj Kollár<br>Modul: Notifications<br>Vytvoření a publikace oznámení"]
+        TC2["<b>TC-002 (AS)</b><br>Autor: Adam Šolc<br>Modul: RBAC & Visibility<br>Ochrana neveřejného obsahu"]
+        TC3["<b>TC-003 (JM)</b><br>Autor: Jan Mach<br>Modul: Release Timing<br>Časování publikace zprávy"]
+        TC4["<b>TC-004 (TK)</b><br>Autor: Tomáš Kanský<br>Moduly: Membership & Member Fields<br>Prevence duplicit a ochrana dat"]
+    end
+
+    style TC1 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style TC2 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+    style TC3 fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    style TC4 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
+```
 
 ---
 
 ### 📋 Šablona pro TC-001 (MK): Vytvoření a zobrazení notifikace ve skupině
 
+> **Autor scénáře:** 👤 Matěj Kollár (`MK`) · **Priorita:** 🟠 `Vysoká` · **Stav:** ✅ `PASS`
+
 | Pole šablony | Hodnota a specifikace |
 |---|---|
 | **TC-ID** | `TC-001 (MK)` |
 | **Název** | Vytvoření a zobrazení notifikace ve skupině |
-| **Požadavek / reference** | `Populon → Administration → Notifications → vytvoření notifikace` (`REQ-NOT-01`, `REQ-NOT-02`) |
-| **Cíl testu** | Ověřit, že administrátor může vyplnit povinné údaje, určit viditelnost pro členy skupiny, zkontrolovat souhrn, uložit notifikaci a zobrazit ji v přehledu i detailu skupiny. |
+| **Požadavek / reference** | `REQ-NOT-01`, `REQ-NOT-02` (`Populon → Administration → Notifications → Vytvoření notifikace`) |
+| **Cíl testu** | Ověřit, že administrátor může úspěšně vytvořit notifikaci, nastavit její viditelnost pro členy skupiny, projít třístupňovým průvodcem, zkontrolovat souhrn a publikovat ji na profilu skupiny. |
 | **Priorita** | `Vysoká` |
-| **Předpoklady** | Administrátor je přihlášen do Populonu a spravuje skupinu `uu_2026_BQAS_team_1`. Je otevřena její administrace a sekce `Notifications`. |
-| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Title:** `První testovací notifikace`<br>• **Description:** `v rámci prvního use casu, vytvářím první notifikaci pro seznámení se systémem`<br>• **Text:** `Notifikace mají v Basic info čtyři povinná pole, Title, Description, Text a Release date, jedno volitelné a to Ending date. Další záložky jsou Visibility and receivers a Summary.`<br>• **Release date:** `11/10/2026 21:48`<br>• **Ending date:** *(prázdné)*<br>• **Visibility:** `Only to members of group`<br>• **Send to new members:** `No` |
-| **Kroky** | 1. V administraci skupiny otevřít `Notifications` a zahájit vytvoření notifikace.<br>2. V `Basic info` vyplnit `Title`, `Description`, `Text` a `Release date` podle testovacích dat; `Ending date` nechat prázdné.<br>3. Přejít na `Visibility & receivers` a nastavit `Only to members of group`; `Send to new members` ponechat vypnuté.<br>4. Přejít na `Summary` a zkontrolovat zadané hodnoty.<br>5. Kliknout na `Save`.<br>6. Otevřít stránku skupiny `uu_2026_BQAS_team_1`, záložku `Notifications`.<br>7. Otevřít notifikaci `První testovací notifikace` a ověřit její detail. |
-| **Očekávaný výsledek** | 1. Průvodce umožní vytvoření notifikace ve třech krocích.<br>2. Povinná pole přijmou platné údaje; `Ending date` lze ponechat prázdné.<br>3. Lze nastavit viditelnost pouze pro členy skupiny; nové členy není nutné zahrnout.<br>4. `Summary` zobrazí správně název, popis, text, data i viditelnost.<br>5. Uložení proběhne a notifikace je dostupná ve skupině po čase zveřejnění.<br>6. V záložce `Notifications` se zobrazí nová notifikace s odpovídajícím názvem.<br>7. Detail zobrazuje správně její název, popis a text. |
-| **Skutečný výsledek** | Skutečný výsledek odpovídá očekávanému. Notifikace se zobrazuje v timeline skupiny i v detailu se zadaným textem. |
-| **Výsledek / stav** | `PASS` |
-| **ID vady / poznámka** | — (automatizováno v `tests/scenarios.spec.ts`) |
+| **Předpoklady** | Administrátor je přihlášen do Populonu a spravuje testovací skupinu `uu_2026_BQAS_team_1`. Je otevřena sekce administrace `Notifications`. |
+| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Title:** `První testovací notifikace`<br>• **Description:** `v rámci prvního use casu, vytvářím první notifikaci pro seznámení se systémem`<br>• **Text:** `Notifikace mají v Basic info čtyři povinná pole, Title, Description, Text a Release date, jedno volitelné a to Ending date. Další záložky jsou Visibility and receivers a Summary.`<br>• **Release date:** `11/10/2026 21:48`<br>• **Ending date:** *(ponecháno prázdné)*<br>• **Visibility:** `Only to members of group`<br>• **Send to new members:** `No` |
+| **Kroky** | 1. V administraci skupiny otevřít záložku `Notifications` a kliknout na vytvoření nové notifikace.<br>2. V kroku `Basic info` vyplnit pole `Title`, `Description`, `Text` a `Release date` dle testovacích dat; pole `Ending date` ponechat prázdné.<br>3. Přejít na krok `Visibility & receivers`, zvolit viditelnost `Only to members of group` a volbu `Send to new members` nechat vypnutou.<br>4. Přejít na krok `Summary` a prověřit souhrn zadaných hodnot.<br>5. Kliknout na tlačítko `Save`.<br>6. Přejít na veřejnou stránku skupiny `uu_2026_BQAS_team_1` a otevřít záložku `Notifications`.<br>7. Kliknout na nově vytvořenou notifikaci `První testovací notifikace` a prověřit její detail. |
+| **Očekávaný výsledek** | 1. Systém otevře třístupňového průvodce pro vytvoření notifikace.<br>2. Všechna povinná pole přijmou zadané údaje; nepovinné pole `Ending date` lze vynechat.<br>3. Viditelnost je úspěšně nastavena na členy pořadatelského spolku.<br>4. Krok `Summary` přehledně a správně rekapituluje název, popis, text zprávy i datum zveřejnění.<br>5. Notifikace se úspěšně uloží bez chybových hlášení.<br>6. V přehledu notifikací skupiny se zobrazuje karta nové notifikace.<br>7. V detailu notifikace se správně zobrazují všechny zadané texty. |
+| **Skutečný výsledek** | Skutečné chování plně odpovídá očekávanému. Notifikace se úspěšně uložila a zobrazuje se jak v časové ose skupiny, tak v plném detailu. |
+| **Výsledek / stav** | **`PASS`** |
+| **ID vady / poznámka** | Scénář je plně automatizován v testu `TC-001 (MK)` v souboru `tests/scenarios.spec.ts`. |
 
 ---
 
 ### 📋 Šablona pro TC-002 (AS): Viditelnost notifikace pouze pro členy skupiny
 
+> **Autor scénáře:** 👤 Adam Šolc (`AS`) · **Priorita:** 🔴 `Kritická` · **Stav:** ✅ `PASS`
+
 | Pole šablony | Hodnota a specifikace |
 |---|---|
 | **TC-ID** | `TC-002 (AS)` |
-| **Název** | Viditelnost notifikace pouze pro členy skupiny |
-| **Požadavek / reference** | `Populon → Administration → Notifications → Visibility & receivers (Only to members of group)` (`REQ-NOT-02`) |
-| **Cíl testu** | Ověřit, že notifikace s nastavenou viditelností `Only to members of group` je viditelná pro aktivního člena skupiny `uu_2026_BQAS_team_1`, ale není viditelná pro nepřihlášeného návštěvníka ani pro přihlášeného uživatele mimo skupinu (ani přes přímý URL odkaz). |
-| **Priorita** | `Vysoká` |
-| **Předpoklady** | Ve skupině `uu_2026_BQAS_team_1` existuje publikovaná notifikace (`První testovací notifikace` z `TC-001`) s viditelností `Only to members of group`. Tester má k dispozici účet člena a přímou URL detailu notifikace. |
-| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Notifikace:** `První testovací notifikace`<br>• **Přímá URL:** `https://demo.populon.app/notificationcard?notificationId=7447`<br>• **Role 1:** Aktivní člen skupiny `uu_2026_BQAS_team_1`<br>• **Role 2:** Anonymní (nepřihlášený) uživatel |
-| **Kroky** | 1. Přihlásit se jako aktivní člen skupiny, otevřít stránku skupiny `uu_2026_BQAS_team_1` → záložku `Notifications` a zkopírovat přímou URL detailu notifikace.<br>2. Odhlásit se z aplikace a jako nepřihlášený (anonymní) návštěvník otevřít veřejný profil skupiny `uu_2026_BQAS_team_1` → záložku `Notifications`.<br>3. Jako nepřihlášený návštěvník zadat přímo do adresního řádku prohlížeče zkopírovanou URL detailu notifikace (`notificationId=7447`). |
-| **Očekávaný výsledek** | 1. Člen skupiny notifikaci vidí v přehledu `Notifications` a může zobrazit její plný detail.<br>2. Nepřihlášený návštěvník notifikaci v přehledu skupiny nevidí (zobrazuje se `No new notifications`).<br>3. Přímá URL detailu neumožní zobrazení obsahu, zobrazí upozornění o nedostatečných oprávněních (`This page has restricted access and you don't have permission to see it at the moment. Please, log in.`) a vyžaduje přihlášení. |
-| **Skutečný výsledek** | Skutečný výsledek odpovídá očekávanému. Člen notifikaci vidí, anonymnímu návštěvníkovi se v přehledu nezobrazuje a přímá URL detailu zablokuje přístup. |
-| **Výsledek / stav** | `PASS` |
-| **ID vady / poznámka** | — (automatizováno v `tests/scenarios.spec.ts`) |
+| **Název** | Viditelnost notifikace pouze pro členy skupiny (Ochrana neveřejného obsahu) |
+| **Požadavek / reference** | `REQ-NOT-02` (`Populon → Administration → Notifications → Visibility: Only to members of group`) |
+| **Cíl testu** | Ověřit bezpečnostní pravidlo viditelnosti: notifikace určená pouze členům spolku je viditelná pro aktivního člena, ale nepřihlášený (anonymní) návštěvník ji neuvidí v přehledu a při pokusu o přímé otevření přes URL je mu přístup odepřen. |
+| **Priorita** | `Vysoká` (Kritický bezpečnostní aspekt RBAC) |
+| **Předpoklady** | Ve skupině `uu_2026_BQAS_team_1` existuje publikovaná notifikace (`První testovací notifikace`) s viditelností `Only to members of group`. Tester má k dispozici účet člena i přímou URL detailu. |
+| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Notifikace:** `První testovací notifikace`<br>• **Přímá URL detailu:** `https://demo.populon.app/notificationcard?notificationId=7447`<br>• **Role 1:** Aktivní člen skupiny `uu_2026_BQAS_team_1`<br>• **Role 2:** Anonymní (nepřihlášený) uživatel |
+| **Kroky** | 1. Přihlásit se jako aktivní člen skupiny, otevřít stránku skupiny `uu_2026_BQAS_team_1` → záložku `Notifications` a zkopírovat přímou URL detailu notifikace.<br>2. Zkontrolovat, že člen vidí plný obsah notifikace.<br>3. Odhlásit se ze systému a jako nepřihlášený anonymní návštěvník otevřít veřejný profil skupiny `uu_2026_BQAS_team_1` → záložku `Notifications`.<br>4. Zadat zkopírovanou URL adresu detailu notifikace přímo do adresního řádku prohlížeče. |
+| **Očekávaný výsledek** | 1. Člen skupiny má k notifikaci plný přístup.<br>2. V detailu se členovi zobrazuje název i tělo zprávy.<br>3. Anonymní návštěvník v přehledu skupiny notifikaci nevidí (zobrazuje se zpráva `No new notifications`).<br>4. Při přímém zadání URL systém zablokuje zobrazení obsahu a vypíše bezpečnostní upozornění: *„This page has restricted access and you don't have permission to see it at the moment. Please, log in.“* |
+| **Skutečný výsledek** | Skutečný výsledek odpovídá očekávanému chování. Oprávněný člen obsah vidí; neoprávněnému návštěvníkovi systém data neukáže ani přes přímou URL. |
+| **Výsledek / stav** | **`PASS`** |
+| **ID vady / poznámka** | Scénář je plně automatizován v testu `TC-002 (AS)` v souboru `tests/scenarios.spec.ts`. |
 
 ---
 
-### 📋 Šablona pro TC-003 (JM): Časování: Notifikace se před Release date nezobrazí a po něm ano
+### 📋 Šablona pro TC-003 (JM): Časování zveřejnění notifikace (Release date)
+
+> **Autor scénáře:** 👤 Jan Mach (`JM`) · **Priorita:** 🟠 `Vysoká` · **Stav:** ✅ `PASS`
 
 | Pole šablony | Hodnota a specifikace |
 |---|---|
 | **TC-ID** | `TC-003 (JM)` |
-| **Název** | Časování: Notifikace se před Release date nezobrazí a po něm ano |
-| **Požadavek / reference** | `Populon → Administration → Notifications → Basic info (Release date)` (`REQ-NOT-01`, `REQ-NOT-02`) |
-| **Cíl testu** | Ověřit, že notifikace s `Release date` v budoucnosti není členovi skupiny dostupná před časem zveřejnění a po jeho uplynutí se zobrazí. |
+| **Název** | Časování zveřejnění notifikace (Nedostupnost před Release date a zobrazení po něm) |
+| **Požadavek / reference** | `REQ-NOT-01`, `REQ-NOT-02` (`Populon → Notifications → Basic info → Release date timing`) |
+| **Cíl testu** | Ověřit časovou podmínku publikace: notifikace s datem zveřejnění v budoucnosti nesmí být pro člena dostupná před časem zveřejnění (ani v přehledu, ani přes přímý URL odkaz). Po uplynutí stanoveného času se notifikace členovi automaticky zpřístupní. |
 | **Priorita** | `Vysoká` |
-| **Předpoklady** | Správce je přihlášen do Populonu a spravuje skupinu `uu_2026_BQAS_team_1`, je otevřena sekce `Notifications`. K dispozici je testovací účet člena stejné skupiny. |
-| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Notification title:** `Druhá testovací notifikace - budoucí vydání`<br>• **Release date:** `24/10/2026 10:00`<br>• **Visibility:** `Only to members of group`<br>• **Send to new members:** `No` |
-| **Kroky** | 1. Jako správce vytvořit notifikaci podle testovacích dat (`Release date: 24/10/2026 10:00`).<br>2. Na záložce `Visibility & receivers` nastavit `Only to members of group`, `Send to new members` vypnuto.<br>3. Na `Summary` zkontrolovat hodnoty a kliknout na `Save`.<br>4. Otevřít `Notifications` v administraci skupiny a zkopírovat URL detailu notifikace.<br>5. Přihlásit se jako člen skupiny před `24/10/2026 10:00`, otevřít záložku `Notifications` skupiny a zkusit i zkopírovaný odkaz.<br>6. Po `24/10/2026 10:00` stránku obnovit a znovu otevřít záložku `Notifications`.<br>7. Otevřít detail notifikace. |
-| **Očekávaný výsledek** | 1. Formulář přijme údaje a notifikace se uloží.<br>2. Viditelnost je nastavena pro členy skupiny.<br>3. Správce notifikaci v administraci vidí i před časem vydání.<br>4. Člen notifikaci před `Release date` nevidí v přehledu ani přes přímý odkaz.<br>5. Po uplynutí `Release date` se notifikace v přehledu skupiny i na dashboardu člena zobrazí.<br>6. Detail notifikace zobrazuje správně název, popis a text. |
-| **Skutečný výsledek** | Skutečný výsledek odpovídá očekávanému. Notifikace před `Release date` není pro člena viditelná v přehledu ani přes URL; notifikace po `Release date` se zobrazuje v přehledu skupiny i na dashboardu. |
-| **Výsledek / stav** | `PASS` |
-| **ID vady / poznámka** | — (automatizováno v `tests/scenarios.spec.ts`) |
+| **Předpoklady** | Správce je přihlášen do skupiny `uu_2026_BQAS_team_1` a má právo zakládat notifikace. Tester má k dispozici účet člena téže skupiny. |
+| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Title:** `Druhá testovací notifikace - budoucí vydání`<br>• **Release date:** `24/10/2026 10:00` (budoucí datum)<br>• **Visibility:** `Only to members of group`<br>• **Send to new members:** `No` |
+| **Kroky** | 1. Jako administrátor založit novou notifikaci s budoucím časem `Release date`.<br>2. Nastavit viditelnost `Only to members of group`, zkontrolovat `Summary` a uložit.<br>3. Z administrace zkopírovat přímý odkaz na detail vytvořené notifikace.<br>4. Přihlásit se jako běžný člen spolku v čase před `Release date`, zkontrolovat záložku `Notifications` ve skupině a pokusit se otevřít zkopírovaný odkaz.<br>5. Po nastání data a času `Release date` stránku obnovit a zkontrolovat záložku `Notifications` a uživatelský Dashboard.<br>6. Otevřít detail notifikace po čase vydání. |
+| **Očekávaný výsledek** | 1. Notifikace se uloží a správce ji v administračním přehledu vidí s označením budoucího vydání.<br>2. Běžný člen před nastáním `Release date` notifikaci nevidí v přehledu a přímý odkaz odmítne zobrazení zprávy.<br>3. Po uplynutí `Release date` se notifikace automaticky zobrazí v časové ose skupiny i na dashboardu přihlášeného člena.<br>4. Detail notifikace po vydání řádně zobrazuje kompletní zadaný text. |
+| **Skutečný výsledek** | Skutečný výsledek odpovídá očekávanému. Notifikace s budoucím datem je před vypršením času pro členy zcela skrytá a po jeho uplynutí je plně dostupná. |
+| **Výsledek / stav** | **`PASS`** |
+| **ID vady / poznámka** | Scénář je plně automatizován v testu `TC-003 (JM)` v souboru `tests/scenarios.spec.ts`. |
 
 ---
 
-### 📋 Šablona pro TC-004 (TK): Správa členských údajů, prevence duplicitní přihlášky a ochrana viditelnosti karty člena
+### 📋 Šablona pro TC-004 (TK): Správa údajů člena, prevence duplicity a ochrana soukromí
+
+> **Autor scénáře:** 👤 Tomáš Kanský (`TK`) · **Priorita:** 🟠 `Vysoká` · **Stav:** ✅ `PASS` *(s evidovanou vadou `BUG-001`)*
 
 | Pole šablony | Hodnota a specifikace |
 |---|---|
 | **TC-ID** | `TC-004 (TK)` |
-| **Název** | Správa členských údajů (Member information), prevence duplicitní přihlášky a ochrana viditelnosti karty člena |
-| **Požadavek / reference** | `Populon → Society → Basic info → Member information → Edit` (`REQ-SOC-06`, `REQ-FLD-02`, `REQ-FLD-04`) |
-| **Cíl testu** | Ověřit, že aktivní člen skupiny `uu_2026_BQAS_team_1` nemá na kartě skupiny možnost odeslat duplicitní přihlášku (vidí odkaz `Member information` na své existující členství), může na své členské kartě upravit a uložit členské údaje (adresu a souhlas se zobrazením), a že členská karta (`membercard`) je chráněna proti neoprávněnému zobrazení nepřihlášeným uživatelem. |
+| **Název** | Správa údajů člena (`Member information`), prevence duplicitní přihlášky a ochrana členské karty |
+| **Požadavek / reference** | `REQ-SOC-06`, `REQ-FLD-02`, `REQ-FLD-04` (`Populon → Society → Member information → Edit`) |
+| **Cíl testu** | Ověřit klíčové pravidlo prevence duplicit (aktivní člen nemá možnost podat opakovanou přihlášku `Join group`, ale vidí tlačítko `Member information`), ověřit možnost editace a uložení členských údajů a prověřit bezpečnostní ochranu URL adresy členské karty před nepřihlášeným návštěvníkem. |
 | **Priorita** | `Vysoká` |
-| **Předpoklady** | Člen (`Tomáš Kanský`) je přihlášen do Populonu a má aktivní členství ve skupině `uu_2026_BQAS_team_1` (`societyId=4516`, `memberId=24096`). |
-| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Karta člena:** `/membercard?memberId=24096`<br>• **Street address:** `Parukářka 4`<br>• **Zip code:** `130 00`<br>• **City:** `Praha 3`<br>• **Country:** `Czechia` (`CZ`)<br>• **Allow to display personal data in attendee lists:** `Ano (zaškrtnuto)` |
-| **Kroky** | 1. Přihlásit se jako aktivní člen skupiny `uu_2026_BQAS_team_1` a z horní navigace (`My groups`) otevřít stránku skupiny `uu_2026_BQAS_team_1`.<br>2. V sekci `Basic info` skupiny ověřit, že systém nenabízí tlačítko pro novou registraci do skupiny (`Join group`), ale zobrazuje tlačítko `Member information` pro přístup k existujícímu členství.<br>3. Kliknout na `Member information` a otevřít členskou kartu (`membercard`) přihlášeného člena.<br>4. Kliknout na `Edit`, ve formuláři `Member information` vyplnit `Street address`, `Zip code`, `City` a zapnout volbu `Allow to display personal data in attendee lists`, a kliknout na `Save`.<br>5. Ověřit zobrazení potvrzovací hlášky `Data saved!`, zkontrolovat zobrazení na přehledové kartě člena a po opětovném otevření `Edit` ověřit, že uložené hodnoty zůstaly v polích formuláře zachovány.<br>6. Zkopírovat přímou URL adresu členské karty (`/membercard?memberId=24096`) a odhlásit se z aplikace.<br>7. Jako nepřihlášený uživatel zadat do prohlížeče zkopírovanou URL členské karty (`/membercard?memberId=24096`). |
-| **Očekávaný výsledek** | 1. Stránka skupiny `uu_2026_BQAS_team_1` se načte.<br>2. Tlačítko pro podání duplicitní přihlášky není zobrazeno; je viditelné tlačítko `Member information`.<br>3. Zobrazí se detail členské karty s kontaktními údaji člena a záložkami `Activities` a `Notifications`.<br>4. Formulář přijme zadané členské údaje a umožní jejich uložení.<br>5. Systém zobrazí potvrzení `Data saved!`, hodnoty jsou ve formuláři perzistentně uloženy a adresa se zobrazí i na přehledové kartě člena.<br>6. Uživatel je úspěšně odhlášen.<br>7. Systém zablokuje přístup k osobním údajům člena, zobrazí varování `This page has restricted access and you don't have permission to see it at the moment. Please, log in.` a osobní údaje člena nevykreslí. |
-| **Skutečný výsledek** | Kroky 1–4 a 6–7 prošly (prevence duplicity i ochrana osobních údajů před nepřihlášeným uživatelem fungují správně). V kroku 5 se zobrazí `Data saved!` a hodnoty v databázi zůstanou, avšak na přehledové kartě člena se u ikony adresy vykreslí pouze `CZ` bez ulice a města. |
-| **Výsledek / stav** | `PASS` *(s evidovanou vadou `BUG-001`)* |
-| **ID vady / poznámka** | `BUG-001` (automatizováno v `tests/scenarios.spec.ts`) |
+| **Předpoklady** | Člen (`Tomáš Kanský`) je přihlášen v Populonu a má aktivní členství ve skupině `uu_2026_BQAS_team_1` (`societyId=4516`, `memberId=24096`). |
+| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Karta člena:** `/membercard?memberId=24096`<br>• **Street address:** `Parukářka 4`<br>• **Zip code:** `130 00`<br>• **City:** `Praha 3`<br>• **Country:** `Czechia` (`CZ`)<br>• **Souhlas se zobrazením v seznamu účastníků:** `Ano (zaškrtnuto)` |
+| **Kroky** | 1. Přihlásit se jako člen skupiny a z navigace (`My groups`) otevřít detail spolku `uu_2026_BQAS_team_1`.<br>2. Prověřit, že v sekci `Basic info` systém nenabízí tlačítko nové přihlášky (`Join group`), nýbrž tlačítko `Member information` odkazující na existující členství.<br>3. Kliknout na `Member information` a otevřít členskou kartu (`membercard`).<br>4. Kliknout na `Edit`, vyplnit pole `Street address`, `Zip code`, `City`, zaškrtnout souhlas s údaji a kliknout na `Save`.<br>5. Zkontrolovat potvrzení `Data saved!`, zobrazení adresy na kartě člena a po dalším otevření `Edit` zkontrolovat zachování uložených dat v polích.<br>6. Zkopírovat přímou URL adresu karty člena (`/membercard?memberId=24096`) a odhlásit se ze systému.<br>7. Jako nepřihlášený návštěvník zadat zkopírovanou URL adresu do prohlížeče. |
+| **Očekávaný výsledek** | 1. Stránka skupiny se korektně načte.<br>2. Systém zabrání duplicitní přihlášce a nabídne správu stávajícího členství.<br>3. Otevře se detail členské karty s kontaktními údaji a záložkami `Activities` a `Notifications`.<br>4. Formulář přijme zadanou adresu a umožní uložení.<br>5. Zobrazí se `Data saved!`, data jsou uložena a celá adresa je přehledně zobrazena na souhrnné kartě člena.<br>6. Uživatel je odhlášen.<br>7. Systém zablokuje přístup k osobním údajům člena a zobrazí varování o omezeném přístupu. |
+| **Skutečný výsledek** | Kroky 1–4 a 6–7 proběhly úspěšně. V kroku 5 se sice zobrazí `Data saved!` a v databázi data zůstávají, avšak na přehledové kartě člena se u ikony lokace zobrazí pouze kód země `CZ` bez ulice a města. Odhalena a zaevidována vada **`BUG-001`**. |
+| **Výsledek / stav** | **`PASS`** *(s evidovanou vadou `BUG-001`)* |
+| **ID vady / poznámka** | Vada zaevidována v [`docs/04-defect-reports.md`](./04-defect-reports.md#bug-001). Test plně automatizován v `tests/scenarios.spec.ts`. |
 
 ---
 
-## 3. Souhrnná tabulka Test Casů (pro export do Excelu / uuManagementKit)
+## 3. Souhrnná tabulka Test Casů
 
-| TC-ID | Název | Požadavek / reference | Cíl testu | Priorita | Předpoklady | Testovací data | Kroky | Očekávaný výsledek | Skutečný výsledek | Výsledek / stav | ID vady / poznámka |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| **TC-001 (MK)** | Vytvoření a zobrazení notifikace ve skupině | `REQ-NOT-01`, `REQ-NOT-02` | Ověřit vytvoření notifikace adminem, určení viditelnosti pro členy a její zobrazení ve skupině. | Vysoká | Správce přihlášen, spravuje skupinu `uu_2026_BQAS_team_1`, otevřeny `Notifications`. | Skupina `uu_2026_BQAS_team_1`, Title: První testovací notifikace, Visibility: Only to members of group | 1. Otevřít Notifications. 2. Vyplnit Basic info. 3. Nastavit Visibility. 4. Zkontrolovat Summary. 5. Save. 6. Otevřít skupinu. 7. Ověřit detail. | 1. 3krokový průvodce. 2. Pole přijmou data. 3. Viditelnost nastavena. 4. Summary správné. 5. Uloženo. 6. Zobrazeno v záložce. 7. Detail odpovídá. | Notifikace je vytvořena a zobrazuje se členům skupiny. | **PASS** | — |
-| **TC-002 (AS)** | Viditelnost notifikace pouze pro členy skupiny | `REQ-NOT-02` | Ověřit, že notifikaci `Only to members of group` vidí člen skupiny, ale nevidí ji nepřihlášený uživatel (ani přes přímou URL). | Vysoká | Ve skupině existuje notifikace z TC-001 s viditelností pro členy. | Účet člena, přímá URL `/notificationcard?notificationId=7447` | 1. Zkontrolovat jako člen a zkopírovat URL. 2. Odhlásit se a otevřít Notifications skupiny. 3. Otevřít přímou URL jako anonym. | 1. Člen notifikaci vidí. 2. Anonym ji v přehledu nevidí. 3. Přímá URL odepře přístup a vyzve k přihlášení. | Člen notifikaci vidí, anonymnímu návštěvníkovi se v přehledu nezobrazuje a přímá URL zablokuje přístup. | **PASS** | — |
-| **TC-003 (JM)** | Časování: Notifikace se před Release date nezobrazí a po něm ano | `REQ-NOT-01`, `REQ-NOT-02` | Ověřit, že notifikace s Release date v budoucnosti není členovi dostupná před časem zveřejnění a po něm ano. | Vysoká | Správce přihlášen do skupiny `uu_2026_BQAS_team_1`, účet člena k dispozici. | Title: Druhá testovací notifikace, Release date: 24/10/2026 10:00, Visibility: Only to members | 1. Vytvořit notifikaci s budoucím datem. 2. Nastavit viditelnost. 3. Save. 4. Zkopírovat URL. 5. Přihlásit se jako člen před časem vydání. 6. Obnovit po čase vydání. 7. Otevřít detail. | 1. Notifikace uložena. 2. Viditelná pro admina. 3. Člen ji před časem nevidí v přehledu ani přes URL. 4. Po Release date se zobrazí. 5. Detail odpovídá. | Notifikace před Release date není pro člena viditelná; po uplynutí času vydání se zobrazuje v přehledu i v detailu. | **PASS** | — |
-| **TC-004 (TK)** | Správa členských údajů, prevence duplicity a ochrana viditelnosti | `REQ-SOC-06`, `REQ-FLD-02`, `REQ-FLD-04` | Ověřit prevenci duplicitního členství, možnost editace a uložení členských údajů a ochranu URL karty člena před anonymním uživatelem. | Vysoká | Člen přihlášen, aktivní členství ve skupině `uu_2026_BQAS_team_1` (`memberId=24096`). | Parukářka 4, 130 00 Praha 3, CZ, Allow to display: Yes | 1. Otevřít skupinu z My groups. 2. Zkontrolovat nepřítomnost Join group. 3. Otevřít Member info. 4. Editovat adresu a Save. 5. Zkontrolovat uložení. 6. Odhlásit se. 7. Otevřít URL člena jako anonym. | 1. Skupina načtena. 2. Nabídnuto Member info místo registrace. 3. Karta člena otevřena. 4. Formulář přijme data. 5. Data saved a uloženo. 6. Odhlášeno. 7. Odepření přístupu k osobním údajům. | Prevence duplicity i ochrana dat funguje. Po uložení se zobrazí Data saved!, na přehledu karty se však zobrazí jen CZ bez adresy (`BUG-001`). | **PASS** | `BUG-001` |
+Následující tabulka slouží jako přímý podklad pro export do **týmového Excelu** (list `Test Cases`) a do **uuManagementKitu**:
 
----
-
-## 3. Otevřené otázky a nápady na další Test Casy (`BQAS | Otevřené otázky a nápady`)
-
-> Přesná kopie diskusního listu z týmového Excelu (*„Diskusní pracovní list • nápady nejsou hotové testy ani schválené požadavky • Co nás napadlo, co je třeba rozhodnout?“*):
-
-| Oblast | Námět | Otázka / hypotéza k diskusi | Stav | Vazba na požadavek |
-|---|---|---|---|---|
-| **Výběr týmového tématu** | FAT/SIT – agilní vs. FAT/SIT – vodopád - nezávislý testovací tým, (DEV) součást vývoje, (UAT) za zákazníka | Jaký přístup nejlépe obhájíme? Jsme tým nezkušených v této oblasti. Dostaneme přiřazeno? = **UAT** | **Schváleno** | Strategie kap. 2 |
-| **Identita aplikace** | Populon Core - představení real app na 1. konzultaci | Cílová testovací aplikace je ve volném výběru, lze i excel? | K ověření | `demo.populon.app` |
-| **Členství** | Opakovaná přihláška bývalého člena | Nesmí vzniknout duplicitní členství = lze na stejný mail, ale ne UserName, upozornění na duplicitu, lze i obnovit členství | Nápad | `REQ-SOC-06` (`TC-004`) |
-| **Členství** | Jedna osoba ve více spolcích | Členství musí být nezávislá; může být ve vícero skupinách | Nápad | `REQ-SOC-04` |
-| **Oprávnění** | Správce nadřazené organizace | Nemá automaticky práva v podspolku; hierarchie skupin - routy | Nápad | `REQ-SOC-05` |
-| **Vlastní pole** | Změna povolených hodnot | Staré uložené hodnoty zůstávají platné. | Nápad | `REQ-FLD-03` |
-| **Vlastní pole** | Nové pole u existujícího členství | Pole se má projevit i u starších členství. | Nápad | `REQ-FLD-04` (`TC-004`) |
-| **Aktivity** | Naplněná kapacita akce | Jak se systém zachová při další registraci? | Nápad | `REQ-ACT-01` |
-| **Aktivity** | Zrušená akce | Upozornění účastníků a blokace nových registrací. | Otevřené | `REQ-ACT-04` |
-| **Oznámení** | Různé úrovně viditelnosti | Neoprávněný uživatel nesmí obsah vidět. | Nápad | `REQ-NOT-02` (`TC-001`–`TC-003`) |
-| **Organizace práce** | Rozdělení odpovědností v týmu | Kdo připraví strategii a kdo šablonu? | Otevřené | Strategie kap. 3 |
+| TC-ID | Název | Požadavek | Cíl testu | Priorita | Předpoklady | Testovací data | Kroky | Očekávaný výsledek | Skutečný výsledek | Stav | ID vady |
+|:---:|---|---|---|:---:|---|---|---|---|---|:---:|:---:|
+| **TC-001 (MK)** | Vytvoření a zobrazení notifikace ve skupině | `REQ-NOT-01`<br>`REQ-NOT-02` | Ověřit tvorbu notifikace správcem, nastavení viditelnosti pro členy a její zobrazení ve skupině. | Vysoká | Správce přihlášen, spravuje `uu_2026_BQAS_team_1`, otevřeny `Notifications`. | Title: První testovací notifikace, Release date: 11/10/2026, Visibility: Members | 1. Otevřít Notifications. 2. Vyplnit Basic info. 3. Zvolit viditelnost. 4. Zkontrolovat Summary. 5. Save. 6. Otevřít skupinu. 7. Ověřit detail. | Notifikace se uloží přes 3krokového průvodce a zobrazí se v záložce skupiny i v detailu. | Notifikace je vytvořena a zobrazuje se členům skupiny. | **PASS** | — |
+| **TC-002 (AS)** | Viditelnost notifikace pouze pro členy skupiny | `REQ-NOT-02` | Ověřit, že notifikaci pro členy vidí člen, ale nevidí ji anonym (ani přes přímou URL). | Vysoká | Ve skupině existuje notifikace z TC-001 s viditelností pro členy. | Účet člena, URL `/notificationcard?notificationId=7447` | 1. Ověřit jako člen a zkopírovat URL. 2. Odhlásit se a otevřít Notifications skupiny. 3. Zadat URL jako anonym. | Člen notifikaci vidí. Anonym ji v přehledu nevidí a přímá URL odepře přístup. | Člen obsah vidí, anonymovi je přístup v přehledu i přes přímou URL odepřen. | **PASS** | — |
+| **TC-003 (JM)** | Časování: Notifikace se před Release date nezobrazí a po něm ano | `REQ-NOT-01`<br>`REQ-NOT-02` | Ověřit, že zpráva s budoucím Release date není členovi dostupná před časem vydání a po něm ano. | Vysoká | Správce přihlášen do skupiny `uu_2026_BQAS_team_1`, účet člena k dispozici. | Title: Druhá notifikace, Release date: 24/10/2026 10:00 | 1. Založit s budoucím časem. 2. Uložit. 3. Zkopírovat URL. 4. Přihlásit se jako člen před časem vydání. 5. Obnovit po čase vydání. 6. Otevřít detail. | Před Release date člen zprávu nevidí v přehledu ani přes URL; po uplynutí času se automaticky zobrazí. | Notifikace je před Release date nepřístupná, po uplynutí termínu se zobrazí. | **PASS** | — |
+| **TC-004 (TK)** | Správa údajů člena, prevence duplicity a ochrana dat | `REQ-SOC-06`<br>`REQ-FLD-02`<br>`REQ-FLD-04` | Ověřit prevenci duplicitního členství, možnost editace údajů a ochranu URL karty člena před anonymem. | Vysoká | Člen přihlášen, aktivní členství ve skupině `uu_2026_BQAS_team_1`. | Parukářka 4, 130 00 Praha 3, CZ | 1. Otevřít skupinu. 2. Zkontrolovat Member info místo Join. 3. Otevřít členskou kartu. 4. Editovat adresu a Save. 5. Prověřit uložení. 6. Odhlásit se. 7. Otevřít URL člena jako anonym. | Duplicita nenabízena. Údaje uloženy. Přímá URL karty člena je pro nepřihlášeného blokována. | Prevence duplicity i ochrana dat fungují. Po uložení se na přehledu zobrazí jen CZ bez adresy (`BUG-001`). | **PASS** | `BUG-001` |
 
 ---
 
-## 4. Mapování na automatizované Playwright E2E testy v repozitáři
+## 4. Záznam diskusního listu z Excelu (Nápady a otázky)
 
-Všechny vypracované týmové scénáře (`TC-001` až `TC-004`) i infrastrukturní testy jsou plně automatizované ve složce [`tests/`](../tests/):
+Tento přehled zrcadlí týmový pracovní list `BQAS | Otevřené otázky a nápady` z 1. milníku:
 
-| Soubor v `tests/` | Pokryté scénáře | Tagy | Stav automatizace |
+| Oblast systému | Původní námět z diskuse | Otázka / hypotéza k vyřešení | Stav v týmu | Výsledné promítnutí |
+|---|---|---|:---:|---|
+| **Výběr tématu** | FAT/SIT vs. UAT | Jaký přístup zvolit? Jsme nezávislý tým nezkušených testerů. | ✅ Schváleno | Zvolen zákaznický UAT přístup |
+| **Identita aplikace** | Populon Core | Reálná webová aplikace `demo.populon.app` | ✅ Schváleno | Skupina `uu_2026_BQAS_team_1` |
+| **Členství** | Opakovaná přihláška bývalého člena | Nesmí vzniknout duplicitní členství, nabídnout obnovu | ✅ Vyřešeno | Pokryto v **`TC-004 (TK)`** (`REQ-SOC-06`) |
+| **Členství** | Jedna osoba ve více spolcích | Členství musí být nezávislá v různých skupinách | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
+| **Oprávnění** | Správce nadřazené organizace | Nemá automaticky práva v podspolku (izolace) | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
+| **Vlastní pole** | Změna povolených hodnot | Staré uložené hodnoty zůstávají platné | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
+| **Vlastní pole** | Nové pole u existujícího člena | Pole se má projevit i u starších členství | ✅ Vyřešeno | Pokryto v **`TC-004 (TK)`** (`REQ-FLD-04`) |
+| **Aktivity** | Naplněná kapacita akce | Jak se systém zachová při registraci navíc? | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
+| **Aktivity** | Zrušená akce | Upozornění účastníků a blokace registrací | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
+| **Oznámení** | Různé úrovně viditelnosti | Neoprávněný uživatel nesmí obsah vidět | ✅ Vyřešeno | Pokryto v **`TC-001`**, **`TC-002`**, **`TC-003`** |
+| **Organizace práce** | Rozdělení v týmu | Kdo připraví strategii a kdo šablonu? | ✅ Vyřešeno | Každý člen týmu garantuje 1 TC |
+
+---
+
+## 5. Přehled automatizace v Playwrightu
+
+Všechny byznysové scénáře jsou plně automatizovány a připraveny k živé prezentaci:
+
+| Testovací soubor | Pokryté scénáře | Tagy | Příkaz pro živé promítání (PowerShell) |
 |---|---|---|---|
-| [`tests/scenarios.spec.ts`](../tests/scenarios.spec.ts) | • **`TC-001 (MK)`**: Vytvoření a zobrazení notifikace ve skupině `uu_2026_BQAS_team_1`<br>• **`TC-002 (AS)`**: Viditelnost notifikace pouze pro členy skupiny (`Only to members of group` vs. anonymní uživatel a přímá URL)<br>• **`TC-003 (JM)`**: Časování notifikace (`Release date` – nedostupnost před vydáním a zobrazení po vydání)<br>• **`TC-004 (TK)`**: Správa členských údajů (`Member information`), prevence duplicitní přihlášky a ochrana viditelnosti karty člena | `@scenarios`, `@tc001`, `@tc002`, `@tc003`, `@tc004`, `@demo` | ✅ Hotovo (4 E2E scénáře) |
-| [`tests/auth.spec.ts`](../tests/auth.spec.ts) | • Vykreslení prvků přihlašovacího formuláře<br>• Negativní test: neplatné přihlašovací údaje zobrazí chybový alert<br>• Negativní test: prázdný formulář neautentizuje<br>• Navigace na obnovu hesla (`password-recovery`)<br>• Pozitivní přihlášení platným účtem z `.env`<br>• Odhlášení uživatele (Logout) | `@auth`, `@smoke`, `@regression` | ✅ Hotovo (6 testů) |
-| [`tests/search.spec.ts`](../tests/search.spec.ts) | • Přechod na vyhledávání skupin přes navbar (`robot-test="nav:searchGroups"`)<br>• Přímý přístup na `/search`<br>• Vyhledání komunity/skupiny podle dotazu | `@search`, `@smoke`, `@regression` | ✅ Hotovo (3 testy) |
-| [`tests/dashboard.spec.ts`](../tests/dashboard.spec.ts) | • Přístup přihlášeného uživatele na Dashboard<br>• Lokalizace: přepnutí jazyka v navigaci (FI ↔ EN) | `@dashboard`, `@smoke`, `@regression` | ✅ Hotovo (2 testy) |
+| [`tests/scenarios.spec.ts`](../tests/scenarios.spec.ts) | • `TC-001 (MK)`<br>• `TC-002 (AS)`<br>• `TC-003 (JM)`<br>• `TC-004 (TK)` | `@scenarios`, `@tc001`, `@tc002`, `@tc003`, `@tc004`, `@demo` | `npm run demo:scenarios` |
+| [`tests/auth.spec.ts`](../tests/auth.spec.ts) | Ověření přihlášení, chybových hlášek a odhlášení | `@auth`, `@smoke` | `npx playwright test tests/auth.spec.ts` |
+| [`tests/dashboard.spec.ts`](../tests/dashboard.spec.ts) | Ověření nástěnky a jazykového přepínače | `@dashboard`, `@smoke` | `npx playwright test tests/dashboard.spec.ts` |
+| [`tests/search.spec.ts`](../tests/search.spec.ts) | Vyhledávání spolků a komunit | `@search`, `@smoke` | `npx playwright test tests/search.spec.ts` |

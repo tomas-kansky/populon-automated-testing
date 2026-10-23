@@ -60,23 +60,23 @@ cd "C:\Users\tomat\Documents\Programming Projects\populon-automated-testing"; np
 
 ---
 
-## 📚 QA Documentation & Course Milestones (`docs/`)
+## 📚 Školní dokumentace a milníky předmětu Zajištění kvality (`docs/`)
 
-This repository acts as the **Single Source of Truth (SSOT)** for the **Zajištění kvality (BQAS)** course (team `uu_2026_BQAS_team_1`), keeping all artifacts structured and ready for export to **uuManagementKit**, **Excel**, and **Word**:
+Tento repozitář slouží jako **hlavní místo pravdy (Single Source of Truth — SSOT)** pro vysokoškolský předmět **Zajištění kvality (BQAS)** týmu `uu_2026_BQAS_team_1`. Veškeré materiály pro odevzdání do **uuManagementKitu**, **týmového Excelu** a **Wordu** jsou kompletně v češtině a připraveny k okamžité prezentaci:
 
-| Document | Milestone | Description |
-|---|---|---|
-| [`AGENTS.md`](AGENTS.md) | All | AI Agent instructions, domain context, and repository conventions |
-| [`docs/00-project-context-and-milestones.md`](docs/00-project-context-and-milestones.md) | M1–M4 | Overview of all 4 milestones, grading (40 pts), and deliverable mapping |
-| [`docs/01-functional-specification.md`](docs/01-functional-specification.md) | M1–M2 | Verbatim **Populon Core — Functional Specification** (`@Lenka`) + Requirement IDs (`REQ-*`) |
-| [`docs/02-test-strategy.md`](docs/02-test-strategy.md) | M1–M4 | Full **Test Strategy** (CZ & EN versions) + 11-point team brainstorming table |
-| [`docs/03-test-cases.md`](docs/03-test-cases.md) | M1–M3 | 12-field **Test Case Template**, Business Test Cases (`TC-001`–`TC-003`), and test ideas backlog |
-| [`docs/04-defect-reports.md`](docs/04-defect-reports.md) | M3 | **Defect Report Template** and registry for up to 5 bugs found during cross-testing |
-| [`docs/05-test-report.md`](docs/05-test-report.md) | M4 | **Test Summary Report** (Executive summary, metrics, and charts across TCs & defects) |
+| Dokument | Milník | Popis a prezentační obsah (100% v češtině) |
+|---|:---:|---|
+| [`AGENTS.md`](AGENTS.md) | Všechny | Projektový kontext, doménová pravidla a pokyny pro AI agenty |
+| [`docs/00-project-context-and-milestones.md`](docs/00-project-context-and-milestones.md) | M1–M4 | Přehled všech 4 milníků, bodování (40 b.), rozcestník a **mluvený tahák pro konzultaci** |
+| [`docs/01-functional-specification.md`](docs/01-functional-specification.md) | M1–M2 | **Funkční specifikace Populon Core** v češtině, stavy, viditelnosti a katalog požadavků (`REQ-*`) |
+| [`docs/02-test-strategy.md`](docs/02-test-strategy.md) | M1–M4 | Kompletní 7kapitolová **Testovací strategie** + 11bodový týmový brainstorming z Excelu |
+| [`docs/03-test-cases.md`](docs/03-test-cases.md) | M1–M3 | **12polová šablona TC**, 4 vyplněné byznysové scénáře (`TC-001` až `TC-004`) a souhrnná tabulka |
+| [`docs/04-defect-reports.md`](docs/04-defect-reports.md) | M3 | **Šablona hlášení vad** a registr 4 reálných chyb (`BUG-001` až `BUG-004`) odhalených při testování |
+| [`docs/05-test-report.md`](docs/05-test-report.md) | M4 | **Závěrečný Testovací Report** (manažerské shrnutí, vyhodnocení kritérií a Mermaid grafy) |
 
 ---
 
-## 📂 Project Structure
+## 📂 Struktura projektu (Project Structure)
 
 ```text
 populon-automated-testing/
