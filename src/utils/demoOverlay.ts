@@ -1,4 +1,5 @@
 import { Page, test } from '@playwright/test';
+import readline from 'readline';
 
 /**
  * Injects a visual Live Demo HUD overlay and element spotlight into the browser page
@@ -175,4 +176,121 @@ export async function demoStep<T>(page: Page, stepTitle: string, body: () => Pro
     }
     return await body();
   });
+}
+
+/**
+ * Pauses test execution interactively during a live presentation so spectators can inspect a discovered bug.
+ * Resumes immediately when the presenter presses ENTER (in terminal OR browser window), or clicks the on-screen HUD button.
+ */
+export async function pauseForInspection(
+  page: Page,
+  bugTitle: string,
+  bugExplanation: string
+): Promise<void> {
+  if (process.env.CI) return;
+
+  console.log(`\n========================================================================`);
+  console.log(`⏸️  POZASTAVENO PRO PROHLÍDKU: ${bugTitle}`);
+  console.log(`ℹ️  ${bugExplanation}`);
+  console.log(`👉 Pokračujte stisknutím klávesy [ENTER] (v terminálu či prohlížeči)`);
+  console.log(`   nebo klikněte na zlaté tlačítko [▶ Pokračovat] v dolním panelu prohlížeče.`);
+  console.log(`========================================================================\n`);
+
+  // Update HUD in browser
+  await page
+    .evaluate(
+      ({ title, desc }) => {
+        const stepEl = document.getElementById('pw-hud-step');
+        const actionEl = document.getElementById('pw-hud-action');
+        if (stepEl) {
+          stepEl.style.color = '#f59e0b';
+          stepEl.textContent = '⏸️ POZASTAVENO PRO PROHLÍDKU: ' + title;
+        }
+        if (actionEl) {
+          actionEl.style.color = '#ffffff';
+          actionEl.textContent = '🔍 ' + desc;
+        }
+      },
+      { title: bugTitle, desc: bugExplanation }
+    )
+    .catch(() => {});
+
+  let terminalCleanup: (() => void) | null = null;
+
+  // 1. Browser listener: Enter/Space key or button click on HUD
+  const browserPromise = page.evaluate(() => {
+    return new Promise<void>((resolve) => {
+      const hud = document.getElementById('pw-live-demo-hud');
+      let btn: HTMLButtonElement | null = null;
+
+      if (hud) {
+        btn = document.createElement('button');
+        btn.id = 'pw-hud-resume-btn';
+        btn.textContent = '▶ Pokračovat [Stiskni Enter]';
+        btn.style.cssText = `
+          display: inline-block;
+          margin-top: 8px;
+          background: #f59e0b;
+          color: #0f172a;
+          font-weight: 800;
+          font-size: 13px;
+          padding: 6px 16px;
+          border: 2px solid #ffffff;
+          border-radius: 6px;
+          cursor: pointer;
+          pointer-events: auto;
+          box-shadow: 0 4px 14px rgba(245, 158, 11, 0.6);
+        `;
+        btn.onclick = () => {
+          btn?.remove();
+          resolve();
+        };
+        hud.appendChild(btn);
+      }
+
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.code === 'Space') {
+          window.removeEventListener('keydown', onKeyDown);
+          btn?.remove();
+          resolve();
+        }
+      };
+      window.addEventListener('keydown', onKeyDown);
+    });
+  });
+
+  // 2. Terminal listener: Enter key in PowerShell / Terminal
+  const terminalPromise = new Promise<void>((resolve) => {
+    try {
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+      terminalCleanup = () => {
+        rl.close();
+      };
+      rl.question('', () => {
+        rl.close();
+        resolve();
+      });
+    } catch {
+      // In non-interactive stdin, fallback gracefully to browser listener
+    }
+  });
+
+  // Wait for either action
+  await Promise.race([browserPromise, terminalPromise]);
+  if (typeof terminalCleanup === 'function') {
+    (terminalCleanup as () => void)();
+  }
+
+  // Reset HUD
+  await page
+    .evaluate(() => {
+      const btn = document.getElementById('pw-hud-resume-btn');
+      if (btn) btn.remove();
+      const stepEl = document.getElementById('pw-hud-step');
+      if (stepEl) stepEl.style.color = '#fde047';
+    })
+    .catch(() => {});
 }

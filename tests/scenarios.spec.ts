@@ -1,4 +1,4 @@
-import { test, expect, demoStep } from '../src/fixtures/testFixtures';
+import { test, expect, demoStep, pauseForInspection } from '../src/fixtures/testFixtures';
 
 const GROUP_NAME = process.env.TEST_GROUP_NAME || 'uu_2026_BQAS_team_1';
 
@@ -201,6 +201,13 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
 
       // Ověření reálné vady BUG-001: uložená adresa člena se na přehledu nevykreslí (pouze kód země "CZ")
       await expect(page.locator('body')).toContainText('CZ');
+
+      // Interaktivní pozastavení dema pro předvedení vady BUG-001 publiku
+      await pauseForInspection(
+        page,
+        'Vada BUG-001 (Nevykreslení uložené adresy člena)',
+        'Všimněte si: u ikony adresy se zobrazuje pouze "CZ", ačkoliv adresa "Parukářka 4, 130 00 Praha 3" byla uložena v databázi.'
+      );
     });
 
     await demoStep(page, 'Krok 6–7: Odhlášení a ověření, že přímá URL členské karty je chráněna před nepřihlášeným uživatelem (GDPR/RBAC)', async () => {
@@ -235,6 +242,13 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     });
 
     await demoStep(page, 'Krok 3 [FAILED PATH]: Kontrola zachování jazykového přepínače v navigaci (Ověření vady BUG-002)', async () => {
+      // Interaktivní pozastavení dema pro předvedení vady BUG-002 publiku
+      await pauseForInspection(
+        page,
+        'Vada BUG-002 (Zmizení jazykového přepínače po přihlášení)',
+        'Všimněte si: ačkoliv jsme se přihlásili z finské mutace (FI), aplikace natvrdo vynutila angličtinu a jazykový přepínač z navigace zcela zmizel.'
+      );
+
       // Vada BUG-002: Jazykový přepínač (FI, SV, EN, SQ) po přihlášení z horní lišty zcela zmizí
       // a aplikace natvrdo vynutí angličtinu bez možnosti přepnutí zpět.
       // Tato aserce selže (element selector není v horní liště nalezen), čímž prokazuje existenci evidované vady BUG-002:

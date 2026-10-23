@@ -16,8 +16,8 @@ const slowMoMs = process.env.SLOW_MO ? Number(process.env.SLOW_MO) : 800;
  */
 export default defineConfig({
   testDir: './tests',
-  /* Extended timeout per test to accommodate slow-motion pauses */
-  timeout: 90 * 1000,
+  /* Extended timeout per test to accommodate slow-motion pauses and interactive bug inspection */
+  timeout: 180 * 1000,
   expect: {
     timeout: 10000,
   },
