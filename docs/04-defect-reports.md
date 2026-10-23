@@ -43,10 +43,10 @@
 | ID vady | Název chyby | Vazba na TC | Závažnost | Priorita | Stav | Nahlásil |
 |---|---|---|---|---|---|---|
 | **BUG-001** | Member information: Uložená adresa člena (`Street address`, `Zip code`, `City`) se po uložení nevykreslí na přehledové kartě člena | `TC-004 (TK)` | `Low` (Minor) | `P3` | `New` | `TK` |
-| **BUG-002** | *(Připraveno k vyplnění při křížovém testování v 3. milníku)* | `TC-...` | — | — | `New` | — |
-| **BUG-003** | *(Připraveno k vyplnění)* | `TC-...` | — | — | `New` | — |
-| **BUG-004** | *(Připraveno k vyplnění)* | `TC-...` | — | — | `New` | — |
-| **BUG-005** | *(Připraveno k vyplnění)* | `TC-...` | — | — | `New` | — |
+| **BUG-002** | Localization: Jazykový přepínač po přihlášení zcela zmizí z navigace a systém vynutí angličtinu (ztráta jazykového nastavení z `/login`) | `TC-001` / Navigace | `Medium` (Moderate) | `P3` | `New` | `TK` |
+| **BUG-003** | Localization: Formulář zpětné vazby (`/feedback`) v albánské mutaci (`SQ`) obsahuje nepřeložené finské texty | Lokalizace (`SQ`) | `Low` (Cosmetic) | `P4` | `New` | `TK` |
+| **BUG-004** | Authentication: Duplicitní vykreslení chybové hlášky neúspěšného přihlášení v panelu `#globalFeedback` | Autentizace (`@auth`) | `Low` (Cosmetic) | `P4` | `New` | `TK` |
+| **BUG-005** | *(Připraveno k vyplnění při křížovém testování v 3. milníku)* | `TC-...` | — | — | `New` | — |
 
 ---
 
@@ -73,3 +73,62 @@
   - Přestože systém vypíše hlášku `Data saved!` a při opětovném otevření `Edit` jsou hodnoty `Parukářka 4`, `130 00` a `Praha 3` v databázi uloženy, přehledová karta `Member information` u ikony adresy vykreslí pouze dvoupísmenný kód země `CZ` a ulici, PSČ i město zcela vynechá. *(Technická poznámka z DOM: u pole `Zip code` je navíc chybně přiřazen atribut `robot-test="memberForm:address.city"`).*
 - **Přílohy / Poznámka:**
   - Reprodukováno automatizovaným testem `TC-004 (TK)` v `tests/scenarios.spec.ts`.
+
+---
+
+### 🐞 BUG-002: Localization: Jazykový přepínač po přihlášení zcela zmizí z navigace a systém vynutí angličtinu
+- **Vazba na TC / Požadavek:** `TC-001` / Navigace & Lokalizace
+- **Nahlásil:** `TK` (Tomáš Kanský) | **Datum:** `2026-10-23`
+- **Závažnost (Severity):** `Medium` (Moderate / Chybějící základní UI ovládací prvek)
+- **Priorita:** `P3` (Medium)
+- **Stav:** `New`
+- **Prostředí:** `https://demo.populon.app/login` → `/usercard` | Prohlížeč: Chromium / Chrome
+- **Předpoklady:**
+  - Uživatel se nachází na přihlašovací obrazovce `/login`.
+- **Kroky k reprodukci:**
+  1. Na stránce `/login` kliknout v horní liště na jazyk `FI` (nebo `SV` či `SQ`).
+  2. Ověřit, že se přihlašovací formulář přepnul do finštiny (`Kirjautuminen`, `Syötä käyttäjätunnus ja sanasana`).
+  3. Vyplnit platné přihlašovací údaje a kliknout na `Kirjaudu`.
+  4. Po přesměrování na `/usercard` zkontrolovat jazyk navigace, záložek a přítomnost jazykového přepínače.
+  5. Přejít do uživatelského nastavení (`/settings`).
+- **Očekávaný výsledek:**
+  - Zvolený jazyk z přihlašovací stránky přetrvá i po přihlášení (nebo je v profilu uživatele volba výchozího jazyka). V horní navigační liště zůstává dostupný jazykový přepínač (`FI`, `SV`, `EN`, `SQ`).
+- **Skutečný výsledek:**
+  - Okamžitě po přihlášení se veškerý text rozhraní vynutí do angličtiny (`Home`, `My groups`, `Activities`, `Pending invitations`, `Notifications`).
+  - Jazykový přepínač z horní lišty kompletně zmizí.
+  - V `/settings` neexistuje žádná možnost změny jazyka. Přihlášený uživatel nemá žádnou možnost, jak pracovat v jiném jazyce než v angličtině.
+
+---
+
+### 🐞 BUG-003: Localization: Formulář zpětné vazby (/feedback) v albánské mutaci (SQ) obsahuje nepřeložené finské texty
+- **Vazba na TC / Požadavek:** Lokalizace & Použitelnost (`SQ`)
+- **Nahlásil:** `TK` (Tomáš Kanský) | **Datum:** `2026-10-23`
+- **Závažnost (Severity):** `Low` (Cosmetic / Lokalizační nekonzistence)
+- **Priorita:** `P4` (Low)
+- **Stav:** `New`
+- **Prostředí:** `https://demo.populon.app/feedback` | Jazyk: `SQ` | Prohlížeč: Chromium / Chrome
+- **Kroky k reprodukci:**
+  1. Otevřít veřejnou stránku `/feedback` a v horní liště přepnout na jazyk `SQ` (albánština).
+  2. Zkontrolovat texty formuláře.
+- **Očekávaný výsledek:**
+  - Všechny popisky formuláře jsou v albánštině.
+- **Skutečný výsledek:**
+  - Zatímco patička a odesílací tlačítko (`Dërgo`) jsou v albánštině, samotný formulář zůstal ve finštině: nadpis `Mielipiteesi on meille tärkeä!`, popisky `Nimi *`, `Sähköpostiosoite *`, `Puhelin`, `Palautteeni *` i tlačítko přílohy `+ Liitä tiedosto`.
+
+---
+
+### 🐞 BUG-004: Authentication: Duplicitní vykreslení chybové hlášky neúspěšného přihlášení v panelu #globalFeedback
+- **Vazba na TC / Požadavek:** Autentizace & Chybová hlášení (`tests/auth.spec.ts`)
+- **Nahlásil:** `TK` (Tomáš Kanský) | **Datum:** `2026-10-23`
+- **Závažnost (Severity):** `Low` (Cosmetic)
+- **Priorita:** `P4` (Low)
+- **Stav:** `New`
+- **Prostředí:** `https://demo.populon.app/login` | Prohlížeč: Chromium / Chrome
+- **Kroky k reprodukci:**
+  1. Otevřít `/login`.
+  2. Zadat neplatné přihlašovací údaje a odeslat formulář.
+  3. Zkontrolovat DOM element `#globalFeedback`.
+- **Očekávaný výsledek:**
+  - Zobrazí se jedna chybová zpráva o neúspěšném přihlášení.
+- **Skutečný výsledek:**
+  - V panelu `#globalFeedback` se vytvoří dva identické alert kontejnery se stejným textem za sebou (např. `× Kirjautuminen epäonnistui! Tarkista käyttäjätunnus ja/tai salasana × Kirjautuminen epäonnistui!...`), což způsobuje strict-mode kolize v automatizovaných testech i vizuální duplikaci.

@@ -85,19 +85,20 @@ xychart-beta
 |---|---|---|---|---|
 | 🔴 **Critical** | 0 | 0 | 0 | — |
 | 🟠 **High** | 0 | 0 | 0 | — |
-| 🟡 **Medium** | 0 | 0 | 0 | — |
-| 🟢 **Low** | 1 | 1 | 0 | `BUG-001` |
-| **Celkem (max. 5)** | **1** | **1** | **0** | `BUG-001` |
+| 🟡 **Medium** | 1 | 1 | 0 | `BUG-002` (ztráta jazyka & chybějící přepínač) |
+| 🟢 **Low** | 3 | 3 | 0 | `BUG-001` (adresa), `BUG-003` (SQ překlad), `BUG-004` (duplicitní alert) |
+| **Celkem (max. 5)** | **4** | **4** | **0** | `BUG-001` až `BUG-004` |
 
 ### 4.2 Rozdělení chyb podle funkčních modulů
 
 | Modul Populon Core | Počet nalezených chyb | Závažnosti |
 |---|---|---|
-| **Societies & Membership** | 0 | — |
+| **Societies & Membership** | 1 | `Low` (`BUG-001` adresa člena) |
 | **Custom Member Data Fields** | 0 | — |
 | **Activities** | 0 | — |
 | **Notifications** | 0 | — |
-| **Authentication / General UI** | 0 | — |
+| **Localization & Navigation** | 2 | `Medium` (`BUG-002`), `Low` (`BUG-003`) |
+| **Authentication & UI** | 1 | `Low` (`BUG-004` duplicitní alert) |
 
 ### 4.3 Graf přes chyby dle závažnosti
 
@@ -106,5 +107,5 @@ xychart-beta
     title "Počet nalezených chyb podle závažnosti (Severity)"
     x-axis ["Critical", "High", "Medium", "Low"]
     y-axis "Počet chyb" 0 --> 5
-    bar [0, 0, 0, 0]
+    bar [0, 0, 1, 3]
 ```
