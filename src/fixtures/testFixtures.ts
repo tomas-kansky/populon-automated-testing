@@ -48,4 +48,4 @@ export const test = base.extend<AppFixtures>({
 });
 
 export { expect } from '@playwright/test';
-export { demoStep, pauseForInspection } from '../utils/demoOverlay';
+export { demoStep, pauseForInspection, pauseForScreenPlacement } from '../utils/demoOverlay';

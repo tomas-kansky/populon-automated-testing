@@ -1,4 +1,4 @@
-import { test, expect, demoStep, pauseForInspection } from '../src/fixtures/testFixtures';
+import { test, expect, demoStep, pauseForInspection, pauseForScreenPlacement } from '../src/fixtures/testFixtures';
 
 const GROUP_NAME = process.env.TEST_GROUP_NAME || 'uu_2026_BQAS_team_1';
 
@@ -16,8 +16,10 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     const password = process.env.TEST_USER_PASSWORD;
     test.skip(!email || !password, 'Skipping TC-001: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
+    await loginPage.goto();
+    await pauseForScreenPlacement(page, 'TC-001 (MK): Vytvoření a zobrazení notifikace ve skupině');
+
     await demoStep(page, 'Předpoklady: Přihlášení do Populonu a přepnutí rozhraní do EN', async () => {
-      await loginPage.goto();
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
       await dashboardPage.expectDashboardLoaded();
@@ -53,10 +55,12 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     const password = process.env.TEST_USER_PASSWORD;
     test.skip(!email || !password, 'Skipping TC-002: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
+    await loginPage.goto();
+    await pauseForScreenPlacement(page, 'TC-002 (AS): Viditelnost notifikace pouze pro členy skupiny');
+
     let directNotificationUrl = '/notificationcard?notificationId=7447';
 
     await demoStep(page, 'Krok 1: Přihlášení jako aktivní člen skupiny a ověření dostupnosti interní notifikace', async () => {
-      await loginPage.goto();
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
       await dashboardPage.expectDashboardLoaded();
@@ -101,8 +105,10 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     const password = process.env.TEST_USER_PASSWORD;
     test.skip(!email || !password, 'Skipping TC-003: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
+    await loginPage.goto();
+    await pauseForScreenPlacement(page, 'TC-003 (JM): Časování zveřejnění notifikace (Release date)');
+
     await demoStep(page, 'Předpoklady: Přihlášení jako člen skupiny uu_2026_BQAS_team_1', async () => {
-      await loginPage.goto();
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
       await dashboardPage.expectDashboardLoaded();
@@ -149,10 +155,12 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     const password = process.env.TEST_USER_PASSWORD;
     test.skip(!email || !password, 'Skipping TC-004: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
+    await loginPage.goto();
+    await pauseForScreenPlacement(page, 'TC-004 (TK): Správa členství, prevence duplicity a ochrana dat');
+
     let memberCardUrl = '/membercard?memberId=24096';
 
     await demoStep(page, 'Krok 1: Přihlášení člena a otevření skupiny uu_2026_BQAS_team_1 přes My groups', async () => {
-      await loginPage.goto();
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
       await dashboardPage.expectDashboardLoaded();
@@ -229,8 +237,10 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     const password = process.env.TEST_USER_PASSWORD;
     test.skip(!email || !password, 'Skipping BUG-002: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
+    await loginPage.goto();
+    await pauseForScreenPlacement(page, 'TC-BUG-002: Ukázka odhalené vady lokalizace');
+
     await demoStep(page, 'Krok 1: Výběr finského jazyka (FI) na veřejné přihlašovací obrazovce', async () => {
-      await loginPage.goto();
       await loginPage.switchLanguage('FI');
       await expect(page.locator('.navbar-nav a', { hasText: /^FI$/i }).first()).toBeVisible();
       await expect(page.locator('button[type="submit"]')).toContainText(/Kirjaudu/i);

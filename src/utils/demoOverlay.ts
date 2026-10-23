@@ -294,3 +294,111 @@ export async function pauseForInspection(
     })
     .catch(() => {});
 }
+
+/**
+ * Initial presentation pause when a test window opens, allowing the presenter
+ * to position/maximize the browser on the correct projector or monitor before starting.
+ */
+export async function pauseForScreenPlacement(page: Page, testTitle: string): Promise<void> {
+  if (process.env.CI) return;
+
+  console.log(`\n========================================================================`);
+  console.log(`🖥️  PŘÍPRAVA PROJEKCE: ${testTitle}`);
+  console.log(`👉 Přemístěte okno prohlížeče na požadovanou obrazovku / projektor.`);
+  console.log(`   Až budete připraveni zahájit test, stiskněte [ENTER] (v terminálu či v prohlížeči)`);
+  console.log(`   nebo klikněte na zelené tlačítko [▶ Spustit scénář] na obrazovce.`);
+  console.log(`========================================================================\n`);
+
+  await page
+    .evaluate(
+      ({ title }) => {
+        const stepEl = document.getElementById('pw-hud-step');
+        const actionEl = document.getElementById('pw-hud-action');
+        if (stepEl) {
+          stepEl.style.color = '#38bdf8';
+          stepEl.textContent = '🖥️ PŘÍPRAVA PROJEKCE: ' + title;
+        }
+        if (actionEl) {
+          actionEl.style.color = '#ffffff';
+          actionEl.textContent = 'Přemístěte okno na správnou obrazovku a stiskněte Enter pro spuštění.';
+        }
+      },
+      { title: testTitle }
+    )
+    .catch(() => {});
+
+  let terminalCleanup: (() => void) | null = null;
+
+  const browserPromise = page.evaluate(() => {
+    return new Promise<void>((resolve) => {
+      const hud = document.getElementById('pw-live-demo-hud');
+      let btn: HTMLButtonElement | null = null;
+
+      if (hud) {
+        btn = document.createElement('button');
+        btn.id = 'pw-hud-start-btn';
+        btn.textContent = '▶ Spustit scénář [Stiskni Enter]';
+        btn.style.cssText = `
+          display: inline-block;
+          margin-top: 8px;
+          background: #10b981;
+          color: #ffffff;
+          font-weight: 800;
+          font-size: 13px;
+          padding: 6px 18px;
+          border: 2px solid #ffffff;
+          border-radius: 6px;
+          cursor: pointer;
+          pointer-events: auto;
+          box-shadow: 0 4px 14px rgba(16, 185, 129, 0.6);
+        `;
+        btn.onclick = () => {
+          btn?.remove();
+          resolve();
+        };
+        hud.appendChild(btn);
+      }
+
+      const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.code === 'Space') {
+          window.removeEventListener('keydown', onKeyDown);
+          btn?.remove();
+          resolve();
+        }
+      };
+      window.addEventListener('keydown', onKeyDown);
+    });
+  });
+
+  const terminalPromise = new Promise<void>((resolve) => {
+    try {
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+      terminalCleanup = () => {
+        rl.close();
+      };
+      rl.question('', () => {
+        rl.close();
+        resolve();
+      });
+    } catch {
+      // In non-interactive stdin, fallback gracefully
+    }
+  });
+
+  await Promise.race([browserPromise, terminalPromise]);
+  if (typeof terminalCleanup === 'function') {
+    (terminalCleanup as () => void)();
+  }
+
+  await page
+    .evaluate(() => {
+      const btn = document.getElementById('pw-hud-start-btn');
+      if (btn) btn.remove();
+      const stepEl = document.getElementById('pw-hud-step');
+      if (stepEl) stepEl.style.color = '#fde047';
+    })
+    .catch(() => {});
+}
