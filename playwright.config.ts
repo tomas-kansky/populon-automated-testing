@@ -48,7 +48,14 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1366, height: 768 } },
+      use: {
+        ...devices['Desktop Chrome'],
+        headless: isHeadless,
+        viewport: { width: 1366, height: 768 },
+        launchOptions: {
+          slowMo: slowMoMs,
+        },
+      },
     },
   ],
 });
