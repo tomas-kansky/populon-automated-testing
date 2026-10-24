@@ -167,11 +167,11 @@ Tento přehled zrcadlí týmový pracovní list `BQAS | Otevřené otázky a ná
 |---|---|---|:---:|---|
 | **Výběr tématu** | FAT/SIT vs. UAT | Jaký přístup zvolit? Jsme nezávislý tým nezkušených testerů. | ✅ Schváleno | Zvolen zákaznický UAT přístup |
 | **Identita aplikace** | Populon Core | Reálná webová aplikace `demo.populon.app` | ✅ Schváleno | Skupina `uu_2026_BQAS_team_1` |
-| **Členství** | Opakovaná přihláška bývalého člena | Nesmí vzniknout duplicitní členství, nabídnout obnovu | ✅ Vyřešeno | Pokryto v **`TC-004 (TK)`** (`REQ-SOC-06`) |
+| **Členství** | Opakovaná přihláška aktivního člena | Nesmí vzniknout duplicitní členství (absence tlačítka Join group) | ✅ Vyřešeno | Pokryto v **`TC-004 (TK)`** (`REQ-SOC-06`) |
 | **Členství** | Jedna osoba ve více spolcích | Členství musí být nezávislá v různých skupinách | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
 | **Oprávnění** | Správce nadřazené organizace | Nemá automaticky práva v podspolku (izolace) | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
 | **Vlastní pole** | Změna povolených hodnot | Staré uložené hodnoty zůstávají platné | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
-| **Vlastní pole** | Nové pole u existujícího člena | Pole se má projevit i u starších členství | ✅ Vyřešeno | Pokryto v **`TC-004 (TK)`** (`REQ-FLD-04`) |
+| **Vlastní pole** | Nové pole u existujícího člena | Pole se má projevit i u starších členství | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
 | **Aktivity** | Naplněná kapacita akce | Jak se systém zachová při registraci navíc? | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
 | **Aktivity** | Zrušená akce | Upozornění účastníků a blokace registrací | 💡 Nápad pro M3 | Zařazeno do backlogu testů |
 | **Oznámení** | Různé úrovně viditelnosti | Neoprávněný uživatel nesmí obsah vidět | ✅ Vyřešeno | Pokryto v **`TC-001`**, **`TC-002`**, **`TC-003`** |
