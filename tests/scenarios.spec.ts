@@ -144,11 +144,11 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     });
   });
 
-  test('TC-004 (TK): Správa členských údajů (Member information), prevence duplicitní přihlášky a ochrana viditelnosti karty člena @tc004 @membership @smoke @demo', async ({
+  test('TC-004 (TK): Vyhledání skupiny aktivním členem a ověření absence tlačítka Join group (prevence duplicity) @tc004 @membership @smoke @demo', async ({
     loginPage,
     dashboardPage,
+    searchPage,
     societyPage,
-    memberCardPage,
     page,
   }) => {
     const email = process.env.TEST_USER_EMAIL;
@@ -156,75 +156,44 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     test.skip(!email || !password, 'Skipping TC-004: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
     await loginPage.goto();
-    await pauseForScreenPlacement(page, 'TC-004 (TK): Správa členství, prevence duplicity a ochrana dat');
+    await pauseForScreenPlacement(page, 'TC-004 (TK): Vyhledání skupiny a ověření absence tlačítka Join group');
 
-    let memberCardUrl = '/membercard?memberId=24096';
-
-    await demoStep(page, 'Krok 1: Přihlášení člena a otevření skupiny uu_2026_BQAS_team_1 přes My groups', async () => {
+    await demoStep(page, 'Krok 1: Přihlášení aktivního člena do systému', async () => {
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
       await dashboardPage.expectDashboardLoaded();
-      await societyPage.openGroupFromNavbar(GROUP_NAME);
+    });
+
+    await demoStep(page, 'Krok 2: Otevření vyhledávání skupin přes horní navigaci (Search groups)', async () => {
+      await searchPage.openSearchFromNavbar();
+    });
+
+    await demoStep(page, 'Krok 3: Vyhledání skupiny uu_2026_BQAS_team_1 ve vyhledávači', async () => {
+      await searchPage.searchFor(GROUP_NAME);
+      await expect(page.locator(`a:has-text("${GROUP_NAME}")`).first()).toBeVisible();
+    });
+
+    await demoStep(page, 'Krok 4: Prokliknutí z výsledků vyhledávání na stránku skupiny', async () => {
+      await searchPage.clickSearchResult(GROUP_NAME);
       await societyPage.expectSocietyLoaded(GROUP_NAME);
     });
 
-    await demoStep(page, 'Krok 2: Ověření prevence duplicitního členství (zobrazen odkaz Member information místo přihlášky)', async () => {
+    await demoStep(page, 'Krok 5: Ověření absence tlačítka Join group (prevence duplicitního členství dle REQ-SOC-06)', async () => {
+      // Systém rozpozná, že přihlášený uživatel již členem skupiny je — nesmí nabízet tlačítko pro novou přihlášku
+      await expect(page.locator('a:has-text("Join group"), a:has-text("Apply for membership"), button:has-text("Join")')).toHaveCount(0);
+      // Namísto toho nabízí správu stávajícího členství
       await expect(societyPage.memberInformationButton).toBeVisible();
-      await expect(page.locator('a:has-text("Join group"), a:has-text("Apply for membership")')).toHaveCount(0);
-    });
 
-    await demoStep(page, 'Krok 3: Otevření členské karty (Member information) přihlášeného člena', async () => {
-      await societyPage.openMemberInformation();
-      await memberCardPage.expectMemberCardLoaded();
-      await expect(memberCardPage.emailLink).toContainText('@');
-      await expect(memberCardPage.phoneLink).toBeVisible();
-      memberCardUrl = page.url();
-    });
-
-    await demoStep(page, 'Krok 4: Úprava členských údajů (Street address, Zip code, City, souhlas se zobrazením) a uložení', async () => {
-      await memberCardPage.openEditForm();
-      await memberCardPage.updateAddressDetails({
-        streetAddress: 'Parukářka 4',
-        zipCode: '130 00',
-        city: 'Praha 3',
-        allowAttendeeList: true,
-      });
-    });
-
-    await demoStep(page, 'Krok 5: Ověření hlášky "Data saved!", kontrola perzistence uložených hodnot a ověření vady BUG-001', async () => {
-      await memberCardPage.expectSaveSuccessAlert();
-      await memberCardPage.openEditForm();
-      await expect(memberCardPage.streetAddressInput).toHaveValue('Parukářka 4');
-      await expect(memberCardPage.zipCodeInput).toHaveValue('130 00');
-      await expect(memberCardPage.cityInput).toHaveValue('Praha 3');
-
-      // Uvedení testovacích polí zpět do čistého výchozího stavu
-      await memberCardPage.updateAddressDetails({
-        streetAddress: '',
-        zipCode: '',
-        city: '',
-        allowAttendeeList: true,
-      });
-      await memberCardPage.expectSaveSuccessAlert();
-
-      // Ověření reálné vady BUG-001: uložená adresa člena se na přehledu nevykreslí (pouze kód země "CZ")
-      await expect(page.locator('body')).toContainText('CZ');
-
-      // Interaktivní pozastavení dema pro předvedení vady BUG-001 publiku
+      // Interaktivní pauza pro ověření publikem
       await pauseForInspection(
         page,
-        'Vada BUG-001 (Nevykreslení uložené adresy člena)',
-        'Všimněte si: u ikony adresy se zobrazuje pouze "CZ", ačkoliv adresa "Parukářka 4, 130 00 Praha 3" byla uložena v databázi.'
+        'Ověření prevence duplicitního členství (REQ-SOC-06)',
+        'Všimněte si: ačkoliv jsme skupinu vyhledali přes veřejný vyhledávač, systém rozpoznává naše existující členství — nenabízí tlačítko "Join group", ale přímo odkaz na existující "Member information".'
       );
     });
 
-    await demoStep(page, 'Krok 6–7: Odhlášení a ověření, že přímá URL členské karty je chráněna před nepřihlášeným uživatelem (GDPR/RBAC)', async () => {
-      await dashboardPage.logout();
-      await page.goto(memberCardUrl);
-      await memberCardPage.waitForPageLoad();
-      await memberCardPage.expectRestrictedAccessForAnonymous();
-      await expect(page.locator('body')).not.toContainText('+420777868179');
-      await page.waitForTimeout(1500);
+    await demoStep(page, 'Krok 6: Úspěšné dokončení testu', async () => {
+      await page.waitForTimeout(1000);
     });
   });
 

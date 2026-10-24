@@ -69,7 +69,7 @@ Aktuální přehled reálných vad odhalených během testování Populon Core n
 
 | ID vady | Název chyby | Vazba na TC | Závažnost | Priorita | Stav | Nahlásil |
 |:---:|---|---|:---:|:---:|:---:|:---:|
-| **BUG-001** | Member information: Uložená adresa člena (`Street address`, `Zip code`, `City`) se nevykreslí na přehledové kartě | `TC-004 (TK)` | 🟢 Nízká | `P3` | `Nová (New)` | `TK` |
+| **BUG-001** | Member information: Uložená adresa člena (`Street address`, `Zip code`, `City`) se nevykreslí na přehledové kartě | Profil člena / `REQ-FLD-04` | 🟢 Nízká | `P3` | `Nová (New)` | `TK` |
 | **BUG-002** | Localization: Jazykový přepínač po přihlášení zcela zmizí z navigace a systém vynutí angličtinu | `TC-001` / UI | 🟡 Střední | `P3` | `Nová (New)` | `TK` |
 | **BUG-003** | Localization: Formulář zpětné vazby (`/feedback`) v albánské mutaci (`SQ`) obsahuje nepřeložené finské texty | Lokalizace | 🟢 Nízká | `P4` | `Nová (New)` | `TK` |
 | **BUG-004** | Authentication: Duplicitní vykreslení chybové hlášky neúspěšného přihlášení v panelu `#globalFeedback` | Autentizace | 🟢 Nízká | `P4` | `Nová (New)` | `TK` |
@@ -85,7 +85,7 @@ Aktuální přehled reálných vad odhalených během testování Populon Core n
 |---|---|
 | **ID vady** | `BUG-001` |
 | **Název** | Member information: Uložená adresa člena (`Street address`, `Zip code`, `City`) se po uložení nevykreslí na přehledové kartě člena |
-| **Vazba na TC / Požadavek** | `TC-004 (TK)` / `REQ-FLD-04` |
+| **Vazba na TC / Požadavek** | Průzkumné testování profilu člena / `REQ-FLD-04` |
 | **Nahlásil / Datum** | `TK` (Tomáš Kanský) · `2026-10-23` |
 | **Závažnost / Priorita** | 🟢 **Nízká (Minor / UI zobrazení dat)** · Priorita: **`P3` (Medium)** |
 | **Stav** | `Nová (New)` |
@@ -94,7 +94,7 @@ Aktuální přehled reálných vad odhalených během testování Populon Core n
 | **Kroky k reprodukci** | 1. Na členské kartě `Member information` kliknout na tlačítko `Edit`.<br>2. Vyplnit pole `Street address`: `Parukářka 4`, `Zip code`: `130 00`, `City`: `Praha 3` a `Country`: `Czechia`.<br>3. Kliknout na tlačítko `Save`.<br>4. Prověřit zobrazenou adresu v přehledovém panelu u ikony lokace (`glyphicon-map-marker`).<br>5. Znovu kliknout na `Edit` a zkontrolovat hodnoty v editačních polích formuláře. |
 | **Očekávaný výsledek** | Po uložení (`Data saved!`) se v přehledovém panelu u ikony adresy zobrazí kompletní uložená adresa člena: `Parukářka 4, 130 00 Praha 3, CZ`. |
 | **Skutečný výsledek** | Přestože systém vypíše potvrzení `Data saved!` a při opětovném otevření `Edit` jsou hodnoty `Parukářka 4`, `130 00` a `Praha 3` v databázi prokazatelně uloženy, přehledová karta u ikony adresy vykreslí pouze dvoupísmenný kód země `CZ` a ulici, PSČ i město zcela vynechá.<br>*(Poznámka z DOM: u pole `Zip code` je navíc v HTML kódu chybně přiřazen atribut `robot-test="memberForm:address.city"`).* |
-| **Důkaz / Příloha** | Scénář je zachycen a automaticky ověřován v testu `TC-004 (TK)` v souboru `tests/scenarios.spec.ts`. |
+| **Důkaz / Příloha** | Zaznamenáno a reprodukováno při testování editace karty člena (`/membercard?memberId=24096`). |
 
 ---
 

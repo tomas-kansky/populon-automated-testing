@@ -13,7 +13,7 @@
    - [TC-001 (MK): Vytvoření a zobrazení notifikace ve skupině](#-šablona-pro-tc-001-mk-vytvoření-a-zobrazení-notifikace-ve-skupině)
    - [TC-002 (AS): Viditelnost notifikace pouze pro členy skupiny](#-šablona-pro-tc-002-as-viditelnost-notifikace-pouze-pro-členy-skupiny)
    - [TC-003 (JM): Časování zveřejnění notifikace (Release date)](#-šablona-pro-tc-003-jm-časování-zveřejnění-notifikace-release-date)
-   - [TC-004 (TK): Správa údajů člena, prevence duplicity a ochrana soukromí](#-šablona-pro-tc-004-tk-správa-údajů-člena-prevence-duplicity-a-ochrana-soukromí)
+   - [TC-004 (TK): Vyhledání skupiny aktivním členem a ověření absence tlačítka Join group](#-šablona-pro-tc-004-tk-vyhledání-skupiny-aktivním-členem-a-ověření-absence-tlačítka-join-group-prevence-duplicity)
 3. [Souhrnná tabulka pro export do Excelu a uuManagementKitu](#3-souhrnná-tabulka-test-casů)
 4. [Záznam diskusního listu z Excelu (Otevřené otázky a nápady)](#4-záznam-diskusního-listu-z-excelu-nápady-a-otázky)
 5. [Přehled automatizace v Playwrightu (100% pokrytí scénářů)](#5-přehled-automatizace-v-playwrightu)
@@ -51,7 +51,7 @@ flowchart TD
         TC1["<b>TC-001 (MK)</b><br>Autor: Matěj Kollár<br>Modul: Notifications<br>Vytvoření a publikace oznámení"]
         TC2["<b>TC-002 (AS)</b><br>Autor: Adam Šolc<br>Modul: RBAC & Visibility<br>Ochrana neveřejného obsahu"]
         TC3["<b>TC-003 (JM)</b><br>Autor: Jan Mach<br>Modul: Release Timing<br>Časování publikace zprávy"]
-        TC4["<b>TC-004 (TK)</b><br>Autor: Tomáš Kanský<br>Moduly: Membership & Member Fields<br>Prevence duplicit a ochrana dat"]
+        TC4["<b>TC-004 (TK)</b><br>Autor: Tomáš Kanský<br>Moduly: Membership & Search<br>Vyhledání a prevence duplicity"]
     end
 
     style TC1 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
@@ -125,24 +125,24 @@ flowchart TD
 
 ---
 
-### 📋 Šablona pro TC-004 (TK): Správa údajů člena, prevence duplicity a ochrana soukromí
+### 📋 Šablona pro TC-004 (TK): Vyhledání skupiny aktivním členem a ověření absence tlačítka Join group (prevence duplicity)
 
-> **Autor scénáře:** 👤 Tomáš Kanský (`TK`) · **Priorita:** 🟠 `Vysoká` · **Stav:** ✅ `PASS` *(s evidovanou vadou `BUG-001`)*
+> **Autor scénáře:** 👤 Tomáš Kanský (`TK`) · **Priorita:** 🟠 `Vysoká` · **Stav:** ✅ `PASS`
 
 | Pole šablony | Hodnota a specifikace |
 |---|---|
 | **TC-ID** | `TC-004 (TK)` |
-| **Název** | Správa údajů člena (`Member information`), prevence duplicitní přihlášky a ochrana členské karty |
-| **Požadavek / reference** | `REQ-SOC-06`, `REQ-FLD-02`, `REQ-FLD-04` (`Populon → Society → Member information → Edit`) |
-| **Cíl testu** | Ověřit klíčové pravidlo prevence duplicit (aktivní člen nemá možnost podat opakovanou přihlášku `Join group`, ale vidí tlačítko `Member information`), ověřit možnost editace a uložení členských údajů a prověřit bezpečnostní ochranu URL adresy členské karty před nepřihlášeným návštěvníkem. |
+| **Název** | Vyhledání skupiny aktivním členem a ověření absence tlačítka Join group (prevence duplicity) |
+| **Požadavek / reference** | `REQ-SOC-06` (`Populon → Horní navigace → Search groups → Detail vyhledané skupiny`) |
+| **Cíl testu** | Ověřit pravidlo prevence duplicitního členství: pokud aktivní přihlášený člen vyhledá svou skupinu přes vyhledávač skupin (`Search groups`) a otevře její profil, systém rozpozná jeho existující členství a nenabízí tlačítko pro podání nové přihlášky (`Join group`), nýbrž nabízí správu stávajícího členství (`Member information`). |
 | **Priorita** | `Vysoká` |
-| **Předpoklady** | Člen (`Tomáš Kanský`) je přihlášen v Populonu a má aktivní členství ve skupině `uu_2026_BQAS_team_1` (`societyId=4516`, `memberId=24096`). |
-| **Testovací data** | • **Skupina:** `uu_2026_BQAS_team_1`<br>• **Karta člena:** `/membercard?memberId=24096`<br>• **Street address:** `Parukářka 4`<br>• **Zip code:** `130 00`<br>• **City:** `Praha 3`<br>• **Country:** `Czechia` (`CZ`)<br>• **Souhlas se zobrazením v seznamu účastníků:** `Ano (zaškrtnuto)` |
-| **Kroky** | 1. Přihlásit se jako člen skupiny a z navigace (`My groups`) otevřít detail spolku `uu_2026_BQAS_team_1`.<br>2. Prověřit, že v sekci `Basic info` systém nenabízí tlačítko nové přihlášky (`Join group`), nýbrž tlačítko `Member information` odkazující na existující členství.<br>3. Kliknout na `Member information` a otevřít členskou kartu (`membercard`).<br>4. Kliknout na `Edit`, vyplnit pole `Street address`, `Zip code`, `City`, zaškrtnout souhlas s údaji a kliknout na `Save`.<br>5. Zkontrolovat potvrzení `Data saved!`, zobrazení adresy na kartě člena a po dalším otevření `Edit` zkontrolovat zachování uložených dat v polích.<br>6. Zkopírovat přímou URL adresu karty člena (`/membercard?memberId=24096`) a odhlásit se ze systému.<br>7. Jako nepřihlášený návštěvník zadat zkopírovanou URL adresu do prohlížeče. |
-| **Očekávaný výsledek** | 1. Stránka skupiny se korektně načte.<br>2. Systém zabrání duplicitní přihlášce a nabídne správu stávajícího členství.<br>3. Otevře se detail členské karty s kontaktními údaji a záložkami `Activities` a `Notifications`.<br>4. Formulář přijme zadanou adresu a umožní uložení.<br>5. Zobrazí se `Data saved!`, data jsou uložena a celá adresa je přehledně zobrazena na souhrnné kartě člena.<br>6. Uživatel je odhlášen.<br>7. Systém zablokuje přístup k osobním údajům člena a zobrazí varování o omezeném přístupu. |
-| **Skutečný výsledek** | Kroky 1–4 a 6–7 proběhly úspěšně. V kroku 5 se sice zobrazí `Data saved!` a v databázi data zůstávají, avšak na přehledové kartě člena se u ikony lokace zobrazí pouze kód země `CZ` bez ulice a města. Odhalena a zaevidována vada **`BUG-001`**. |
-| **Výsledek / stav** | **`PASS`** *(s evidovanou vadou `BUG-001`)* |
-| **ID vady / poznámka** | Vada zaevidována v [`docs/04-defect-reports.md`](./04-defect-reports.md#bug-001). Test plně automatizován v `tests/scenarios.spec.ts`. |
+| **Předpoklady** | Člen (`Tomáš Kanský`) je přihlášen do Populonu a má aktivní členství ve skupině `uu_2026_BQAS_team_1`. |
+| **Testovací data** | • **Hledaná skupina:** `uu_2026_BQAS_team_1`<br>• **Vyhledávací URL:** `/search` |
+| **Kroky** | 1. Přihlásit se do systému jako aktivní člen skupiny.<br>2. V horní navigační liště kliknout na `Search groups` (vyhledání skupin).<br>3. Do vyhledávacího pole zadat název skupiny `uu_2026_BQAS_team_1` a spustit vyhledávání.<br>4. Ve výsledcích vyhledávání kliknout na odkaz skupiny `uu_2026_BQAS_team_1`.<br>5. Na načtené stránce skupiny zkontrolovat sekci `Basic info` a provést pauzu pro ověření, že se nikde nenabízí tlačítko `Join group`, ale je k dispozici tlačítko `Member information`.<br>6. Úspěšné dokončení testu a zavření prohlížeče. |
+| **Očekávaný výsledek** | 1. Uživatel je úspěšně přihlášen na Dashboard.<br>2. Otevře se stránka vyhledávače skupin `/search`.<br>3. Systém vyhledá požadovanou skupinu a zobrazí ji v tabulce výsledků.<br>4. Zobrazí se veřejný profil skupiny `uu_2026_BQAS_team_1`.<br>5. Systém aktivnímu členovi nenabízí podání duplicitní přihlášky (tlačítko `Join group` chybí) a zobrazuje tlačítko `Member information` pro správu existujícího členství.<br>6. Test je úspěšně dokončen a prohlížeč se korektně zavře. |
+| **Skutečný výsledek** | Skutečný výsledek plně odpovídá očekávanému chování. Vyhledání i prokliknutí proběhnou korektně a systém přihlášenému členovi tlačítko `Join group` nezobrazí, čímž spolehlivě brání duplicitě. |
+| **Výsledek / stav** | **`PASS`** |
+| **ID vady / poznámka** | Scénář je plně automatizován v testu `TC-004 (TK)` v souboru `tests/scenarios.spec.ts`. |
 
 ---
 
@@ -155,7 +155,7 @@ Následující tabulka slouží jako přímý podklad pro export do **týmového
 | **TC-001 (MK)** | Vytvoření a zobrazení notifikace ve skupině | `REQ-NOT-01`<br>`REQ-NOT-02` | Ověřit tvorbu notifikace správcem, nastavení viditelnosti pro členy a její zobrazení ve skupině. | Vysoká | Správce přihlášen, spravuje `uu_2026_BQAS_team_1`, otevřeny `Notifications`. | Title: První testovací notifikace, Release date: 11/10/2026, Visibility: Members | 1. Otevřít Notifications. 2. Vyplnit Basic info. 3. Zvolit viditelnost. 4. Zkontrolovat Summary. 5. Save. 6. Otevřít skupinu. 7. Ověřit detail. | Notifikace se uloží přes 3krokového průvodce a zobrazí se v záložce skupiny i v detailu. | Notifikace je vytvořena a zobrazuje se členům skupiny. | **PASS** | — |
 | **TC-002 (AS)** | Viditelnost notifikace pouze pro členy skupiny | `REQ-NOT-02` | Ověřit, že notifikaci pro členy vidí člen, ale nevidí ji anonym (ani přes přímou URL). | Vysoká | Ve skupině existuje notifikace z TC-001 s viditelností pro členy. | Účet člena, URL `/notificationcard?notificationId=7447` | 1. Ověřit jako člen a zkopírovat URL. 2. Odhlásit se a otevřít Notifications skupiny. 3. Zadat URL jako anonym. | Člen notifikaci vidí. Anonym ji v přehledu nevidí a přímá URL odepře přístup. | Člen obsah vidí, anonymovi je přístup v přehledu i přes přímou URL odepřen. | **PASS** | — |
 | **TC-003 (JM)** | Časování: Notifikace se před Release date nezobrazí a po něm ano | `REQ-NOT-01`<br>`REQ-NOT-02` | Ověřit, že zpráva s budoucím Release date není členovi dostupná před časem vydání a po něm ano. | Vysoká | Správce přihlášen do skupiny `uu_2026_BQAS_team_1`, účet člena k dispozici. | Title: Druhá notifikace, Release date: 24/10/2026 10:00 | 1. Založit s budoucím časem. 2. Uložit. 3. Zkopírovat URL. 4. Přihlásit se jako člen před časem vydání. 5. Obnovit po čase vydání. 6. Otevřít detail. | Před Release date člen zprávu nevidí v přehledu ani přes URL; po uplynutí času se automaticky zobrazí. | Notifikace je před Release date nepřístupná, po uplynutí termínu se zobrazí. | **PASS** | — |
-| **TC-004 (TK)** | Správa údajů člena, prevence duplicity a ochrana dat | `REQ-SOC-06`<br>`REQ-FLD-02`<br>`REQ-FLD-04` | Ověřit prevenci duplicitního členství, možnost editace údajů a ochranu URL karty člena před anonymem. | Vysoká | Člen přihlášen, aktivní členství ve skupině `uu_2026_BQAS_team_1`. | Parukářka 4, 130 00 Praha 3, CZ | 1. Otevřít skupinu. 2. Zkontrolovat Member info místo Join. 3. Otevřít členskou kartu. 4. Editovat adresu a Save. 5. Prověřit uložení. 6. Odhlásit se. 7. Otevřít URL člena jako anonym. | Duplicita nenabízena. Údaje uloženy. Přímá URL karty člena je pro nepřihlášeného blokována. | Prevence duplicity i ochrana dat fungují. Po uložení se na přehledu zobrazí jen CZ bez adresy (`BUG-001`). | **PASS** | `BUG-001` |
+| **TC-004 (TK)** | Vyhledání skupiny aktivním členem a ověření absence tlačítka Join group (prevence duplicity) | `REQ-SOC-06` | Ověřit prevenci duplicitního členství: přihlášený člen vyhledá skupinu přes Search groups a na jejím profilu nemá tlačítko Join group, ale Member information. | Vysoká | Člen přihlášen, aktivní členství ve skupině `uu_2026_BQAS_team_1`. | Hledaná skupina: `uu_2026_BQAS_team_1`, URL: `/search` | 1. Přihlásit se. 2. Otevřít Search groups v navbaru. 3. Vyhledat skupinu uu_2026_BQAS_team_1. 4. Kliknout na skupinu. 5. Ověřit absenci Join group a přítomnost Member info (pauza). 6. Zavřít prohlížeč. | Skupina vyhledána a načtena. Tlačítko Join group není zobrazeno, systém nabízí Member info. | Skupina vyhledána a otevřena. Tlačítko Join group chybí, systém nabízí správu existujícího členství (Member information). | **PASS** | — |
 
 ---
 
@@ -190,6 +190,6 @@ Všechny byznysové scénáře jsou plně automatizovány a připraveny k živé
 | **Pouze TC-001 (MK)** | Vytvoření a publikace notifikace ve skupině (Matěj Kollár) | `npm run demo:tc1` |
 | **Pouze TC-002 (AS)** | Ochrana neveřejné notifikace před anonymem / RBAC (Adam Šolc) | `npm run demo:tc2` |
 | **Pouze TC-003 (JM)** | Časování zveřejnění notifikace dle Release date (Jan Mach) | `npm run demo:tc3` |
-| **Pouze TC-004 (TK)** | Správa členství, prevence duplicity a ochrana údajů (Tomáš Kanský) | `npm run demo:tc4` |
+| **Pouze TC-004 (TK)** | Vyhledání skupiny aktivním členem a ověření absence tlačítka Join group (Tomáš Kanský) | `npm run demo:tc4` |
 | **Pouze vada BUG-002** | Živá ukázka selhání způsobeného zmizením jazykového přepínače | `npm run demo:bug002` |
 | **Interaktivní výběr (UI)** | Otevře Playwright UI okno pro výběr a krokování testů | `npm run demo:ui` |

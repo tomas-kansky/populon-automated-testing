@@ -38,4 +38,18 @@ export class SearchPage extends BasePage {
     }
     await this.waitForPageLoad();
   }
+
+  async openSearchFromNavbar(): Promise<void> {
+    const searchNav = this.page.locator('[robot-test="nav:searchGroups"]:visible, a[href*="search"], a:has-text("Search groups"), a:has-text("Etsi yhteisö")').first();
+    await expect(searchNav).toBeVisible();
+    await searchNav.click();
+    await this.expectSearchPageLoaded();
+  }
+
+  async clickSearchResult(groupName: string): Promise<void> {
+    const groupLink = this.page.locator(`a:has-text("${groupName}")`).first();
+    await expect(groupLink).toBeVisible();
+    await groupLink.click();
+    await this.waitForPageLoad();
+  }
 }
