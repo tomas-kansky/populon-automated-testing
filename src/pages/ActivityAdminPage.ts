@@ -154,7 +154,11 @@ export class ActivityAdminPage extends BasePage {
     await menuButton.click();
     await this.page.waitForTimeout(300);
 
-    const publishLink = row.locator('a:has-text("Publish"), [wicketpath*="menu_items_1_menuItem_menuItemLink"]').first();
+    const publishLink = row
+      .locator(
+        '[wicketpath*="menu_items_1_menuItem_menuItemLink"], .dropdown-menu a[role="menuitem"]:has-text("Publish")'
+      )
+      .first();
     await expect(publishLink).toBeVisible();
     await publishLink.click();
     await this.page.waitForTimeout(600);
@@ -172,7 +176,8 @@ export class ActivityAdminPage extends BasePage {
 
     await this.waitForPageLoad();
     const updatedRow = this.page.locator('table tbody tr', { hasText: activityName }).first();
-    await expect(updatedRow).toContainText(/PUBLISHED/i);
+    await expect(updatedRow).not.toContainText(/UNPUBLISHED/i);
+    await expect(updatedRow).toContainText(/\bPUBLISHED\b/i);
   }
 
   /**
