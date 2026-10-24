@@ -52,12 +52,16 @@ export class SocietyPage extends BasePage {
    * Navigates to the group via the top navbar "My groups" dropdown if visible, falling back to direct URL.
    */
   async openGroupFromNavbar(groupName: string = 'uu_2026_BQAS_team_1'): Promise<void> {
-    const groupLink = this.page.locator('a', { hasText: groupName }).first();
+    const dropdownGroupLink = this.page
+      .locator(
+        `[wicketpath*="navLeftList_1_component_dropdown-menu"] a:has-text("${groupName}"), .dropdown-menu a:has-text("${groupName}")`
+      )
+      .first();
     if (await this.myGroupsButton.isVisible()) {
       await this.myGroupsButton.click();
-      await this.page.waitForTimeout(300);
-      if (await groupLink.isVisible()) {
-        await groupLink.click();
+      await this.page.waitForTimeout(400);
+      if (await dropdownGroupLink.isVisible()) {
+        await dropdownGroupLink.click();
         await this.waitForPageLoad();
         return;
       }

@@ -57,7 +57,7 @@ Když se vyučující zeptá na status týmu `uu_2026_BQAS_team_1`, postupuj pod
 > *„Máme kompletně splněné úkoly pro 1. i 2. milník a máme v předstihu hotový i 3. a 4. milník:*  
 > *1. Máme schválenou jednotnou **12polovou šablonu testovacího případu**.*  
 > *2. Zpracovali jsme **kompletní 7kapitolovou Testovací strategii** v češtině vycházející z týmového brainstormingu.*  
-> *3. Vybrali jsme klíčové **byznysové scénáře** pokrývající notifikace, časování, řízení přístupových práv (RBAC) a správu členství s prevencí duplicit.*  
+> *3. Vybrali jsme klíčové **byznysové scénáře** pokrývající notifikace, časování, řízení přístupových práv (RBAC) a zakládání i publikování aktivit ve skupině (`Activities`).*  
 > *4. Všechny tyto scénáře máme vyplněné v naší šabloně pro každého člena týmu (`TC-001 (MK)`, `TC-002 (AS)`, `TC-003 (JM)`, `TC-004 (TK)`).*  
 > *5. Všechny scénáře jsme manuálně i automatizovaně otestovali přímo v aplikaci `demo.populon.app`, odhalili jsme **4 reálné vady** (např. chybu zobrazení adresy člena a ztrátu jazykového přepínače po přihlášení) a připravili **závěrečný manažerský report s grafy**.*  
 > *Zároveň máme připravené **živé demo v prohlížeči**, které můžeme rovnou ukázat.“*

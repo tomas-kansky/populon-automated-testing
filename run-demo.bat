@@ -8,7 +8,7 @@ echo ==============================================================
 echo.
 echo   [1] Spustit VSECHNY scenare (TC-001 az TC-004 + vada BUG-002) (Default - Enter)
 echo   [2] Spustit pouze 100%% PROCHAZEJICI scenare (TC-001 az TC-004 bez BUG-002)
-echo   [3] Spustit jen TC-004 (TK) - Tomáš Kanský (Vyhledani skupiny a prevence duplicity)
+echo   [3] Spustit jen TC-004 (TK) - Tomáš Kanský (Zalozeni a publikovani aktivity + Home)
 echo   [4] Spustit jen ukázku odhalené vady BUG-002 (Lokalizace / Jazyk)
 echo   [5] Spustit VSECHNY testy v projektu (16 testu)
 echo   [6] Otevrit interaktivni Playwright UI (vyber testu kliknutim)

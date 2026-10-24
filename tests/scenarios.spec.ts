@@ -144,11 +144,11 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     });
   });
 
-  test('TC-004 (TK): Vyhledání skupiny aktivním členem a ověření absence tlačítka Join group (prevence duplicity) @tc004 @membership @smoke @demo', async ({
+  test('TC-004 (TK): Založení a publikování nové aktivity ve skupině a kontrola jejího zobrazení na stránce Home @tc004 @activities @smoke @demo', async ({
     loginPage,
     dashboardPage,
-    searchPage,
     societyPage,
+    activityAdminPage,
     page,
   }) => {
     const email = process.env.TEST_USER_EMAIL;
@@ -156,44 +156,56 @@ test.describe('BQAS Business Test Cases — Populon Core (uu_2026_BQAS_team_1) @
     test.skip(!email || !password, 'Skipping TC-004: TEST_USER_EMAIL or TEST_USER_PASSWORD is not set in .env');
 
     await loginPage.goto();
-    await pauseForScreenPlacement(page, 'TC-004 (TK): Vyhledání skupiny a ověření absence tlačítka Join group');
+    await pauseForScreenPlacement(page, 'TC-004 (TK): Založení a publikování aktivity ve skupině');
 
-    await demoStep(page, 'Krok 1: Přihlášení aktivního člena do systému', async () => {
+    let activityName = 'Test (TK) 2';
+
+    await demoStep(page, 'Krok 1: Přihlášení člena s oprávněním administrátora do systému', async () => {
       await loginPage.switchLanguage('EN');
       await loginPage.login(email!, password!);
       await dashboardPage.expectDashboardLoaded();
     });
 
-    await demoStep(page, 'Krok 2: Otevření vyhledávání skupin přes horní navigaci (Search groups)', async () => {
-      await searchPage.openSearchFromNavbar();
-    });
-
-    await demoStep(page, 'Krok 3: Vyhledání skupiny uu_2026_BQAS_team_1 ve vyhledávači', async () => {
-      await searchPage.searchFor(GROUP_NAME);
-      await expect(page.locator(`a:has-text("${GROUP_NAME}")`).first()).toBeVisible();
-    });
-
-    await demoStep(page, 'Krok 4: Prokliknutí z výsledků vyhledávání na stránku skupiny', async () => {
-      await searchPage.clickSearchResult(GROUP_NAME);
+    await demoStep(page, 'Krok 2: Otevření My groups -> výběr skupiny uu_2026_BQAS_team_1 -> kliknutí na tlačítko Administration', async () => {
+      await societyPage.openGroupFromNavbar(GROUP_NAME);
       await societyPage.expectSocietyLoaded(GROUP_NAME);
+      await activityAdminPage.openAdministrationFromSociety();
     });
 
-    await demoStep(page, 'Krok 5: Ověření absence tlačítka Join group (prevence duplicitního členství dle REQ-SOC-06)', async () => {
-      // Systém rozpozná, že přihlášený uživatel již členem skupiny je — nesmí nabízet tlačítko pro novou přihlášku
-      await expect(page.locator('a:has-text("Join group"), a:has-text("Apply for membership"), button:has-text("Join")')).toHaveCount(0);
-      // Namísto toho nabízí správu stávajícího členství
-      await expect(societyPage.memberInformationButton).toBeVisible();
+    await demoStep(page, 'Krok 3: Přechod do sekce Activities v levém menu a kliknutí na tlačítko Add', async () => {
+      await activityAdminPage.openActivitiesSection();
+      activityName = await activityAdminPage.getNextActivityName('Test (TK)');
+      await activityAdminPage.clickAddActivity();
+    });
 
-      // Interaktivní pauza pro ověření publikem
+    await demoStep(page, 'Krok 4: Vyplnění pole Name (Test (TK) [inkrementální číslo]) a přechod přes Page 2 (Contact info) a Page 3 (Settings)', async () => {
+      await activityAdminPage.fillActivityNameOnPage1(activityName);
+      await activityAdminPage.goToWizardStep(/Contact info/i);
+      await activityAdminPage.goToWizardStep(/Settings/i);
+    });
+
+    await demoStep(page, 'Krok 5: Přechod na Page 4 (Receivers) a zaškrtnutí testovaného člena (Tomáš Kanský)', async () => {
+      await activityAdminPage.goToWizardStep(/Receivers/i);
+      await activityAdminPage.selectMemberOnReceiversPage(/Tomáš Kanský|Kanský/i);
+    });
+
+    await demoStep(page, 'Krok 6: Přechod na závěrečnou stránku průvodce (Summary) a uložení aktivity tlačítkem Save', async () => {
+      await activityAdminPage.goToWizardStep(/Summary/i);
+      await activityAdminPage.saveActivityOnSummaryPage(activityName);
+    });
+
+    await demoStep(page, 'Krok 7: Publikování uložené aktivity v tabulce přes tlačítko Menu -> Publish', async () => {
+      await activityAdminPage.publishActivityFromRowMenu(activityName);
+    });
+
+    await demoStep(page, 'Krok 8: Přechod na stránku Home a kontrola zobrazení nově publikované aktivity', async () => {
+      await activityAdminPage.verifyActivityOnHomePage(activityName);
+
       await pauseForInspection(
         page,
-        'Ověření prevence duplicitního členství (REQ-SOC-06)',
-        'Všimněte si: ačkoliv jsme skupinu vyhledali přes veřejný vyhledávač, systém rozpoznává naše existující členství — nenabízí tlačítko "Join group", ale přímo odkaz na existující "Member information".'
+        `Ověření publikované aktivity "${activityName}" na stránce Home (REQ-ACT-01)`,
+        `Všimněte si: nově založená a publikovaná aktivita "${activityName}" se ihned zobrazuje na hlavní stránce Home v přehledu aktivit pozvaného člena.`
       );
-    });
-
-    await demoStep(page, 'Krok 6: Úspěšné dokončení testu', async () => {
-      await page.waitForTimeout(1000);
     });
   });
 

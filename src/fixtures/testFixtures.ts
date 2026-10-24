@@ -5,6 +5,7 @@ import { SearchPage } from '../pages/SearchPage';
 import { SocietyPage } from '../pages/SocietyPage';
 import { NotificationDetailPage } from '../pages/NotificationDetailPage';
 import { MemberCardPage } from '../pages/MemberCardPage';
+import { ActivityAdminPage } from '../pages/ActivityAdminPage';
 import { installDemoOverlay } from '../utils/demoOverlay';
 
 type AppFixtures = {
@@ -14,6 +15,7 @@ type AppFixtures = {
   societyPage: SocietyPage;
   notificationDetailPage: NotificationDetailPage;
   memberCardPage: MemberCardPage;
+  activityAdminPage: ActivityAdminPage;
 };
 
 export const test = base.extend<AppFixtures>({
@@ -44,6 +46,10 @@ export const test = base.extend<AppFixtures>({
   memberCardPage: async ({ page }, use) => {
     const memberCardPage = new MemberCardPage(page);
     await use(memberCardPage);
+  },
+  activityAdminPage: async ({ page }, use) => {
+    const activityAdminPage = new ActivityAdminPage(page);
+    await use(activityAdminPage);
   },
 });
 
